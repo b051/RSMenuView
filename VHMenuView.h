@@ -14,6 +14,7 @@
 
 @optional
 - (UIFont *)menuView:(VHMenuView *)menuView fontForTextAtIndent:(NSUInteger)indent;
+- (void)menuView:(VHMenuView *)menuView didSelectedItemWithIdentifier:(NSString *)identifier;
 
 @end
 

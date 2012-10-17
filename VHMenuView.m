@@ -222,4 +222,15 @@ NSString * const kVHMenuItems = @"items";
 	return indexPath;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	NSDictionary *row = [currentRows objectAtIndex:indexPath.row];
+	NSString *identifier = [row objectForKey:kVHMenuIdentifier];
+	if (identifier) {
+		if ([self.delegate respondsToSelector:@selector(menuView:didSelectedItemWithIdentifier:)]) {
+			[self.delegate menuView:self didSelectedItemWithIdentifier:identifier];
+		}
+	}
+}
+
 @end
