@@ -1,0 +1,106 @@
+(
+	{
+		title = "All Streams";
+		leftview = allstreams;
+		identifier = allstreams;
+	},
+	{
+		title = "Saved View 1";
+		leftview = "saved_view";
+		rightviews = (
+			{
+				type = VHMenuButton;
+				image = "menu_options";
+				identifier = "saved[0].options";
+			},
+			{
+				type = VHMenuCount;
+				identifier = "saved[0].count";
+			},
+		);
+		identifier = "saved[0]";
+	},
+	{
+		title = "Saved View 2";
+		leftview = "saved_view";
+		rightviews = (
+			{
+				type = VHMenuButton;
+				image = "menu_options";
+				identifier = "saved[1].options";
+			},
+			{
+				type = VHMenuCount;
+				identifier = "saved[1].count";
+			},
+		);
+		identifier = "saved[1]";
+	},
+	{
+		leftview = message;
+		title = Messages;
+		rightviews = (
+			{
+				type = VHMenuButton;
+				image = "menu_compose";
+				identifier = "messages.compose";
+			},
+		);
+		identifier = messages;
+	},
+	{
+		title = Scheduled;
+		leftview = schedule;
+		indent = 1;
+		rightviews = (
+			{
+				type = VHMenuCount;
+				identifier = "messages.scheduled.count";
+			},
+		);
+		identifier = "messages.scheduled";
+	},
+	{
+		title = Sent;
+		leftview = schedule;
+		indent = 1;
+		rightviews = (
+			{
+				type = VHMenuCount;
+				identifier = "messages.sent.count";
+			},
+		);
+		identifier = "messages.sent";
+	},
+	{
+		leftview = analytics;
+		identifier = analytics;
+		title = Analytics;
+		itemsOpened = NO;
+		items = (
+			{
+				title = "My Facebook";
+				indent = 1;
+				leftview = social;
+				identifier = "analytics.facebook";
+			},
+			{
+				title = "My Twitter";
+				indent = 1;
+				leftview = social;
+				identifier = "analytics.twitter";
+			},
+			{
+				title = "My LinkedIn";
+				indent = 1;
+				leftview = social;
+				identifier = "analytics.linkedin";
+			},
+		);
+	},
+	{
+		leftview = help;
+		title = "Help Center";  
+		identifier = help;
+	},
+)
