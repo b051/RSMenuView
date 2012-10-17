@@ -27,6 +27,7 @@ NSString * const kVHMenuItems = @"items";
 	NSArray *configuration;
 	NSMutableArray *currentRows;
 	UITableView *_tableView;
+	NSString *selectedIdentifier;
 	__unsafe_unretained Class cellClass;
 }
 
@@ -187,20 +188,39 @@ NSString * const kVHMenuItems = @"items";
 	}
 	//rightviews
 	NSArray *subitems = [row objectForKey:kVHMenuItems];
-	NSArray *rightViews = [row objectForKey:kVHMenuRightViews];
+	NSArray *rightViewsConfiguration = [row objectForKey:kVHMenuRightViews];
 	NSString *identifier = [row objectForKey:kVHMenuIdentifier];
+
+	NSMutableArray *rightViews = [NSMutableArray array];
+	if (rightViewsConfiguration) {
+		for (NSDictionary *config in rightViewsConfiguration) {
+			id rid = config[kVHMenuIdentifier];
+			if ([self.delegate respondsToSelector:@selector(menuView:attributesForItemWithIdentifier:)]) {
+				NSDictionary *attributes = [self.delegate menuView:self attributesForItemWithIdentifier:rid];
+				if (attributes) {
+					NSMutableDictionary *r = [config mutableCopy];
+					[r addEntriesFromDictionary:attributes];
+					[rightViews addObject:r];
+				} else {
+					[rightViews addObject:config];
+				}
+			} else {
+				[rightViews addObject:config];
+			}
+		}
+	}
 	if (subitems && identifier) {
-		NSMutableArray *newRightViews = [NSMutableArray array];
-		[newRightViews addObjectsFromArray:rightViews];
 		BOOL opening = [[foldableRows objectForKey:identifier] boolValue];
-		[newRightViews addObject:@{
+		[rightViews addObject:@{
 					 kVHMenuType: @"VHMenuFoldButton",
 			   kVHMenuIdentifier: identifier,
 				  kVHMenuOpening: @(opening)
 		 }];
-		rightViews = newRightViews;
 	}
 	[cell.rightView loadItems:rightViews];
+	if ([selectedIdentifier isEqualToString:identifier]) {
+		[cell setSelected:YES animated:NO];
+	}
 	return cell;
 }
 
@@ -221,12 +241,23 @@ NSString * const kVHMenuItems = @"items";
 	return indexPath;
 }
 
+- (void)setItemSelectedWithIdentifier:(NSString *)identifier
+{
+	selectedIdentifier = identifier;
+	[currentRows enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+		if ([obj[kVHMenuIdentifier] isEqualToString:selectedIdentifier]) {
+			[_tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:idx inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
+		}
+	}];
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	NSDictionary *row = [currentRows objectAtIndex:indexPath.row];
 	NSString *identifier = [row objectForKey:kVHMenuIdentifier];
 	if (identifier) {
 		if ([self.delegate respondsToSelector:@selector(menuView:didSelectedItemWithIdentifier:)]) {
+			selectedIdentifier = identifier;
 			[self.delegate menuView:self didSelectedItemWithIdentifier:identifier];
 		}
 	}

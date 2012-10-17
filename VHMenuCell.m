@@ -10,16 +10,19 @@
 @implementation VHMenuCell
 
 @synthesize rightView;
+@synthesize selected, highlighted;
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated
+- (void)setSelected:(BOOL)_selected animated:(BOOL)animated
 {
+	selected = _selected;
 	self.textLabel.shadowColor = selected ? [UIColor blackColor] : nil;
 	self.textLabel.highlighted = selected;
 	self.imageView.highlighted = selected;
 }
 
-- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated
+- (void)setHighlighted:(BOOL)_highlighted animated:(BOOL)animated
 {
+	highlighted = _highlighted;
 	self.textLabel.highlighted = highlighted;
 	self.imageView.highlighted = highlighted;
 }

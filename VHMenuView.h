@@ -14,6 +14,7 @@
 @optional
 - (UIFont *)menuView:(VHMenuView *)menuView fontForTextAtIndent:(NSUInteger)indent;
 - (void)menuView:(VHMenuView *)menuView didSelectedItemWithIdentifier:(NSString *)identifier;
+- (NSDictionary *)menuView:(VHMenuView *)menuView attributesForItemWithIdentifier:(NSString *)identifier;
 
 @end
 
@@ -30,5 +31,6 @@
 @property (nonatomic, strong) UIColor *highlightedTextColor;
 
 - (void)loadFromConfiguration:(NSArray *)configuration;
+- (void)setItemSelectedWithIdentifier:(NSString *)identifier;
 
 @end

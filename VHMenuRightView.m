@@ -7,8 +7,6 @@
 
 #import "VHMenuRightView.h"
 #import "VHMenuRightViewInfo.h"
-#import "VHMenuCount.h"
-#import "VHMenuButton.h"
 
 NSString * const kVHMenuType = @"type";
 NSString * const kVHMenuIdentifier = @"identifier";
@@ -27,6 +25,10 @@ NSString * const kVHMenuIdentifier = @"identifier";
 		view.frame = CGRectMake(x, 0, size.width, size.height);
 	}
 	[super layoutSubviews];
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated
+{
 }
 
 - (void)loadItems:(NSArray *)items
