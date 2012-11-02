@@ -74,19 +74,19 @@ NSString * const kVHMenuItems = @"items";
 
 - (void)menuFoldingChanged:(NSNotification *)note
 {
-	id opening = [note.userInfo objectForKey:kVHMenuOpening];
-	id identifier = [note.userInfo objectForKey:kVHMenuIdentifier];
-	[foldableRows setObject:opening forKey:identifier];
+	id opening = (note.userInfo)[kVHMenuOpening];
+	id identifier = (note.userInfo)[kVHMenuIdentifier];
+	foldableRows[identifier] = opening;
 	
 	__block NSDictionary *config = nil;
 	[configuration enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-		if ([[obj objectForKey:kVHMenuIdentifier] isEqualToString:identifier]) {
+		if ([obj[kVHMenuIdentifier] isEqualToString:identifier]) {
 			*stop = YES;
 			config = obj;
 		}
 	}];
 	NSUInteger startRow = [currentRows indexOfObject:config] + 1;
-	NSArray *subitems = [config objectForKey:kVHMenuItems];
+	NSArray *subitems = config[kVHMenuItems];
 	[_tableView beginUpdates];
 	if ([opening boolValue]) {
 		NSMutableArray *indexPaths = [NSMutableArray array];
@@ -115,11 +115,11 @@ NSString * const kVHMenuItems = @"items";
 	currentRows = [NSMutableArray arrayWithArray:configuration];
 	
 	[configuration enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-		NSArray *subitems = [obj objectForKey:kVHMenuItems];
-		NSString *identifier = [obj objectForKey:kVHMenuIdentifier];
+		NSArray *subitems = obj[kVHMenuItems];
+		NSString *identifier = obj[kVHMenuIdentifier];
 		if (subitems && identifier) {
 			BOOL opening = [obj[@"itemsOpened"] boolValue];
-			[foldableRows setObject:@(opening) forKey:identifier];
+			foldableRows[identifier] = @(opening);
 			if (opening) [currentRows addObjectsFromArray:subitems];
 		}
 	}];
@@ -167,19 +167,19 @@ NSString * const kVHMenuItems = @"items";
 		[cell.contentView addSubview:cell.rightView];
 	}
 	
-	NSDictionary *row = [currentRows objectAtIndex:indexPath.row];
+	NSDictionary *row = currentRows[indexPath.row];
 	//indent
-	NSUInteger indent = [[row objectForKey:@"indent"] integerValue];
+	NSUInteger indent = [row[@"indent"] integerValue];
 	if ([self.delegate respondsToSelector:@selector(menuView:fontForTextAtIndent:)]) {
 		cell.textLabel.font = [self.delegate menuView:self fontForTextAtIndent:indent];
 	}
 	[(VHRowBackgroundView *)cell.backgroundView setHighlighted:indent == 0];
 	
 	//title
-	cell.textLabel.text = [row objectForKey:@"title"];
+	cell.textLabel.text = row[@"title"];
 	
 	//leftviews
-	NSString *leftview = [row objectForKey:@"leftview"];
+	NSString *leftview = row[@"leftview"];
 	if (leftview) {
 		cell.imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@_active", leftview]];
 		cell.imageView.highlightedImage = [UIImage imageNamed:[NSString stringWithFormat:@"%@_enabled", leftview]];
@@ -187,9 +187,9 @@ NSString * const kVHMenuItems = @"items";
 		cell.imageView.image = nil;
 	}
 	//rightviews
-	NSArray *subitems = [row objectForKey:kVHMenuItems];
-	NSArray *rightViewsConfiguration = [row objectForKey:kVHMenuRightViews];
-	NSString *identifier = [row objectForKey:kVHMenuIdentifier];
+	NSArray *subitems = row[kVHMenuItems];
+	NSArray *rightViewsConfiguration = row[kVHMenuRightViews];
+	NSString *identifier = row[kVHMenuIdentifier];
 
 	NSMutableArray *rightViews = [NSMutableArray array];
 	if (rightViewsConfiguration) {
@@ -210,7 +210,7 @@ NSString * const kVHMenuItems = @"items";
 		}
 	}
 	if (subitems && identifier) {
-		BOOL opening = [[foldableRows objectForKey:identifier] boolValue];
+		BOOL opening = [foldableRows[identifier] boolValue];
 		[rightViews addObject:@{
 					 kVHMenuType: @"VHMenuFoldButton",
 			   kVHMenuIdentifier: identifier,
@@ -226,11 +226,11 @@ NSString * const kVHMenuItems = @"items";
 
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	NSDictionary *row = [currentRows objectAtIndex:indexPath.row];
-	NSArray *subitems = [row objectForKey:kVHMenuItems];
-	NSString *identifier = [row objectForKey:kVHMenuIdentifier];
+	NSDictionary *row = currentRows[indexPath.row];
+	NSArray *subitems = row[kVHMenuItems];
+	NSString *identifier = row[kVHMenuIdentifier];
 	if (subitems && identifier) {
-		BOOL opening = ![[foldableRows objectForKey:identifier] boolValue];
+		BOOL opening = ![foldableRows[identifier] boolValue];
 		[[NSNotificationCenter defaultCenter] postNotificationName:VHMenuOpenNotification
 															object:nil
 														  userInfo:@{
@@ -253,8 +253,8 @@ NSString * const kVHMenuItems = @"items";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	NSDictionary *row = [currentRows objectAtIndex:indexPath.row];
-	NSString *identifier = [row objectForKey:kVHMenuIdentifier];
+	NSDictionary *row = currentRows[indexPath.row];
+	NSString *identifier = row[kVHMenuIdentifier];
 	if (identifier) {
 		if ([self.delegate respondsToSelector:@selector(menuView:didSelectedItemWithIdentifier:)]) {
 			selectedIdentifier = identifier;
