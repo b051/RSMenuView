@@ -7,6 +7,8 @@
 
 #import "VHMenuRightViewInfo.h"
 
+extern NSString * const VHMenuButtonClickedNotificationName;
+
 @interface VHMenuButton : UIView <VHMenuRightViewInfo>
 
 @end

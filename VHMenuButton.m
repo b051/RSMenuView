@@ -7,6 +7,8 @@
 
 #import "VHMenuButton.h"
 
+NSString * const VHMenuButtonClickedNotificationName = @"VHMenuButtonClickedNotification";
+
 @implementation VHMenuButton
 {
 	NSString *identifier;
@@ -30,7 +32,7 @@
 - (void)buttonClicked:(id)sender
 {
 	if (identifier) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:identifier object:self];
+		[[NSNotificationCenter defaultCenter] postNotificationName:VHMenuButtonClickedNotificationName object:identifier];
 	}
 }
 
