@@ -20,15 +20,16 @@
 
 @interface VHMenuView : UIView
 
-- (id)initWithFrame:(CGRect)frame cellClass:(Class)cellClass;
-
-@property (nonatomic, unsafe_unretained) id<VHMenuViewDelegate> delegate;
 @property (nonatomic) UITableViewRowAnimation rowAnimation;
-@property (nonatomic) CGSize rowSize;
-@property (nonatomic) UIEdgeInsets rowEdgeInsets;
+@property (nonatomic, strong) UIColor *textColor UI_APPEARANCE_SELECTOR;
+@property (nonatomic, strong) UIColor *highlightedTextColor UI_APPEARANCE_SELECTOR;
 
-@property (nonatomic, strong) UIColor *textColor;
-@property (nonatomic, strong) UIColor *highlightedTextColor;
+@property (nonatomic) CGFloat rowHeight UI_APPEARANCE_SELECTOR;
+@property (nonatomic) UIEdgeInsets rowEdgeInsets UI_APPEARANCE_SELECTOR;
+
+@property (nonatomic) CGSize textShadowOffset UI_APPEARANCE_SELECTOR;
+
+@property (nonatomic, weak) id<VHMenuViewDelegate> delegate;
 
 - (void)loadFromConfiguration:(NSArray *)configuration;
 - (void)setItemSelectedWithIdentifier:(NSString *)identifier;

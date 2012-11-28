@@ -12,4 +12,7 @@
 
 @property (nonatomic, strong) VHMenuRightView *rightView;
 
+@property (nonatomic, strong) UIColor *selectedTextShadowColor UI_APPEARANCE_SELECTOR;
+@property (nonatomic, strong) UIColor *textShadowColor UI_APPEARANCE_SELECTOR;
+
 @end

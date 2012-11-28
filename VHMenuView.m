@@ -28,35 +28,29 @@ NSString * const kVHMenuItems = @"items";
 	NSMutableArray *currentRows;
 	UITableView *_tableView;
 	NSString *selectedIdentifier;
+	NSIndexPath *indexPathOfSelectedRow;
 	__unsafe_unretained Class cellClass;
+	BOOL everLayedout;
 }
 
-@synthesize textColor, highlightedTextColor;
-@synthesize rowAnimation, rowSize, rowEdgeInsets;
-@synthesize delegate;
+@synthesize rowEdgeInsets=_rowEdgeInsets;
 
 - (id)initWithFrame:(CGRect)frame
 {
-	return [self initWithFrame:frame cellClass:[VHMenuCell class]];
-}
-
-- (id)initWithFrame:(CGRect)frame cellClass:(__unsafe_unretained Class)_cellClass
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-		cellClass = _cellClass;
-		NSAssert([cellClass isSubclassOfClass:[VHMenuCell class]], @"cellClass must be VHMenuCell subclass");
+	if (self = [super initWithFrame:frame]) {
+		cellClass = [VHMenuCell class];
+		self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		_tableView = [[UITableView alloc] initWithFrame:self.bounds style:UITableViewStylePlain];
 		_tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		[self addSubview:_tableView];
 		_tableView.delegate = self;
-		textColor = [UIColor whiteColor];
+		_textColor = [UIColor whiteColor];
+		_textShadowOffset = CGSizeMake(0, 1);
 		_tableView.dataSource = self;
 		_tableView.backgroundColor = [UIColor clearColor];
 		_tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 		foldableRows = [NSMutableDictionary dictionary];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(menuFoldingChanged:) name:VHMenuOpenNotification object:nil];
-		self.rowSize = CGSizeMake(frame.size.width, 44);
     }
     return self;
 }
@@ -66,10 +60,14 @@ NSString * const kVHMenuItems = @"items";
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)setRowSize:(CGSize)_rowSize
+- (void)setRowHeight:(CGFloat)rowHeight
 {
-	rowSize = _rowSize;
-	_tableView.rowHeight = rowSize.height;
+	_tableView.rowHeight = rowHeight;
+}
+
+- (CGFloat)rowHeight
+{
+	return _tableView.rowHeight;
 }
 
 - (void)menuFoldingChanged:(NSNotification *)note
@@ -95,7 +93,7 @@ NSString * const kVHMenuItems = @"items";
 			[currentRows insertObject:subitems[i] atIndex:row];
 			[indexPaths addObject:[NSIndexPath indexPathForRow:row inSection:0]];
 		}
-		[_tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:rowAnimation];
+		[_tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:_rowAnimation];
 	} else {
 		NSMutableArray *indexPaths = [NSMutableArray array];
 		[currentRows removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(startRow, subitems.count)]];
@@ -103,7 +101,7 @@ NSString * const kVHMenuItems = @"items";
 			NSUInteger row = startRow + i;
 			[indexPaths addObject:[NSIndexPath indexPathForRow:row inSection:0]];
 		}
-		[_tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:rowAnimation];
+		[_tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:_rowAnimation];
 	}
 	[_tableView endUpdates];
 }
@@ -129,7 +127,7 @@ NSString * const kVHMenuItems = @"items";
 #pragma mark - UITableView Delegate & DataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-	return 1;
+	return currentRows ? 1 : 0;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -142,31 +140,19 @@ NSString * const kVHMenuItems = @"items";
 	static NSString *cellIdentifier = @"VHMenuCell";
 	VHMenuCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 	if (!cell) {
-		cell = [[cellClass alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-		CGRect frame = cell.contentView.bounds;
-		cell.backgroundView = [[VHRowBackgroundView alloc] initWithFrame:frame];
-		cell.selectedBackgroundView = [[VHRowBackgroundView alloc] initWithFrame:frame];
-		
-		//imageview
-		CGFloat r = frame.size.height - rowEdgeInsets.top - rowEdgeInsets.bottom;
-		cell.imageView.frame = CGRectMake(rowEdgeInsets.left, rowEdgeInsets.top, r, r);
-		cell.imageView.contentMode = UIViewContentModeCenter;
-		
-		//textlabel
-		CGFloat x = r + rowEdgeInsets.left * 2;
-		cell.textLabel.frame = CGRectMake(x, rowEdgeInsets.top, rowSize.width - rowEdgeInsets.right - x, r);
-		cell.textLabel.textColor = [UIColor whiteColor];
-		cell.textLabel.highlightedTextColor = self.highlightedTextColor;
-		cell.textLabel.shadowOffset = CGSizeMake(0, 1);
-		
-		//rightview
-		frame.size.width = rowSize.width;
-		
-		cell.rightView = [[VHMenuRightView alloc] initWithFrame:cell.textLabel.frame];
-		cell.rightView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleLeftMargin;
-		[cell.contentView addSubview:cell.rightView];
+		cell = [[VHMenuCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 	}
+	CGRect frame = cell.contentView.bounds;
+	//imageview
+	CGFloat r = tableView.rowHeight - _rowEdgeInsets.top - _rowEdgeInsets.bottom;
+	cell.imageView.frame = CGRectMake(_rowEdgeInsets.left, _rowEdgeInsets.top, r, r);
 	
+	//textlabel
+	CGFloat x = r + _rowEdgeInsets.left * 2;
+	cell.rightView.frame = cell.textLabel.frame = CGRectMake(x, _rowEdgeInsets.top, frame.size.width - _rowEdgeInsets.right - x, r);
+	cell.textLabel.textColor = _textColor;
+	cell.textLabel.highlightedTextColor = _highlightedTextColor;
+	cell.textLabel.shadowOffset = _textShadowOffset;
 	NSDictionary *row = currentRows[indexPath.row];
 	//indent
 	NSUInteger indent = [row[@"indent"] integerValue];
@@ -190,7 +176,7 @@ NSString * const kVHMenuItems = @"items";
 	NSArray *subitems = row[kVHMenuItems];
 	NSArray *rightViewsConfiguration = row[kVHMenuRightViews];
 	NSString *identifier = row[kVHMenuIdentifier];
-
+	
 	NSMutableArray *rightViews = [NSMutableArray array];
 	if (rightViewsConfiguration) {
 		for (NSDictionary *config in rightViewsConfiguration) {
@@ -212,20 +198,22 @@ NSString * const kVHMenuItems = @"items";
 	if (subitems && identifier) {
 		BOOL opening = [foldableRows[identifier] boolValue];
 		[rightViews addObject:@{
-					 kVHMenuType: @"VHMenuFoldButton",
-			   kVHMenuIdentifier: identifier,
-				  kVHMenuOpening: @(opening)
+				  kVHMenuType:@"VHMenuFoldButton",
+			kVHMenuIdentifier:identifier,
+			   kVHMenuOpening:@(opening)
 		 }];
 	}
 	[cell.rightView loadItems:rightViews];
 	if ([selectedIdentifier isEqualToString:identifier]) {
 		[cell setSelected:YES animated:NO];
+		indexPathOfSelectedRow = indexPath;
 	}
 	return cell;
 }
 
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+	[[tableView cellForRowAtIndexPath:indexPathOfSelectedRow] setSelected:NO animated:YES];
 	NSDictionary *row = currentRows[indexPath.row];
 	NSArray *subitems = row[kVHMenuItems];
 	NSString *identifier = row[kVHMenuIdentifier];
@@ -234,21 +222,35 @@ NSString * const kVHMenuItems = @"items";
 		[[NSNotificationCenter defaultCenter] postNotificationName:VHMenuOpenNotification
 															object:nil
 														  userInfo:@{
-													kVHMenuOpening: @(opening),
-												 kVHMenuIdentifier: identifier}];
+													kVHMenuOpening:@(opening),
+												 kVHMenuIdentifier:identifier}];
 		return nil;
 	}
 	return indexPath;
 }
 
+- (void)layoutSubviews
+{
+	everLayedout = YES;
+	[super layoutSubviews];
+}
+
 - (void)setItemSelectedWithIdentifier:(NSString *)identifier
 {
-	selectedIdentifier = identifier;
-	[currentRows enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-		if ([obj[kVHMenuIdentifier] isEqualToString:selectedIdentifier]) {
-			[_tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:idx inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
+	if (![selectedIdentifier isEqualToString:identifier]) {
+		selectedIdentifier = identifier;
+		if (everLayedout) {
+			int idx = 0;
+			for (NSDictionary *row in currentRows) {
+				if ([row[kVHMenuIdentifier] isEqualToString:selectedIdentifier]) {
+					[_tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:idx inSection:0] animated:NO scrollPosition:UITableViewRowAnimationNone];
+					break;
+				}
+				idx++;
+			}
+			
 		}
-	}];
+	}
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

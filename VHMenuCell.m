@@ -6,16 +6,29 @@
 //
 
 #import "VHMenuCell.h"
+#import "VHRowBackgroundView.h"
 
 @implementation VHMenuCell
 
-@synthesize rightView;
 @synthesize selected, highlighted;
+
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+{
+	if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
+		self.backgroundView = [[VHRowBackgroundView alloc] initWithFrame:self.contentView.bounds];
+		self.selectedBackgroundView = [[VHRowBackgroundView alloc] initWithFrame:self.contentView.bounds];
+		self.imageView.contentMode = UIViewContentModeCenter;
+		_rightView = [[VHMenuRightView alloc] initWithFrame:self.contentView.bounds];
+		self.rightView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleLeftMargin;
+		[self.contentView addSubview:_rightView];
+	}
+	return self;
+}
 
 - (void)setSelected:(BOOL)_selected animated:(BOOL)animated
 {
 	selected = _selected;
-	self.textLabel.shadowColor = selected ? [UIColor blackColor] : nil;
+	self.textLabel.shadowColor = selected ? _selectedTextShadowColor : _textShadowColor;
 	self.textLabel.highlighted = selected;
 	self.imageView.highlighted = selected;
 }
