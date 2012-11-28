@@ -213,7 +213,10 @@ NSString * const kVHMenuItems = @"items";
 
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	[[tableView cellForRowAtIndexPath:indexPathOfSelectedRow] setSelected:NO animated:YES];
+	if (indexPathOfSelectedRow) {
+		[[tableView cellForRowAtIndexPath:indexPathOfSelectedRow] setSelected:NO animated:YES];
+		indexPathOfSelectedRow = nil;
+	}
 	NSDictionary *row = currentRows[indexPath.row];
 	NSArray *subitems = row[kVHMenuItems];
 	NSString *identifier = row[kVHMenuIdentifier];
@@ -226,6 +229,7 @@ NSString * const kVHMenuItems = @"items";
 												 kVHMenuIdentifier:identifier}];
 		return nil;
 	}
+	indexPathOfSelectedRow = indexPath;
 	return indexPath;
 }
 
