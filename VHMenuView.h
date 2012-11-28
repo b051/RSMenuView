@@ -31,7 +31,12 @@
 
 @property (nonatomic, weak) id<VHMenuViewDelegate> delegate;
 
-- (void)loadFromConfiguration:(NSArray *)configuration;
+- (void)setItems:(NSArray *)configuration;
+- (void)insertItem:(NSDictionary *)item atRow:(NSUInteger)row;
+- (void)deleteItemAtRow:(NSUInteger)row;
+- (void)replaceItemAtRow:(NSUInteger)row withItem:(NSDictionary *)item;
+- (void)performBatchUpdates:(dispatch_block_t)updates;
+
 - (void)setItemSelectedWithIdentifier:(NSString *)identifier;
 
 @end

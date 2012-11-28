@@ -18,22 +18,20 @@ NSString * const kVHMenuItems = @"items";
 
 #pragma mark - VHMenuView
 @interface VHMenuView () <UITableViewDataSource, UITableViewDelegate>
-
+@property (nonatomic, strong) NSMutableArray *configuration;
+@property (nonatomic, strong) NSMutableArray *currentRows;
+@property (nonatomic, strong) NSMutableDictionary *foldableRows;
 @end
 
 @implementation VHMenuView
 {
-	NSMutableDictionary *foldableRows;
-	NSArray *configuration;
-	NSMutableArray *currentRows;
 	UITableView *_tableView;
 	NSString *selectedIdentifier;
 	NSIndexPath *indexPathOfSelectedRow;
 	__unsafe_unretained Class cellClass;
 	BOOL everLayedout;
+	BOOL _inBatchUpdates;
 }
-
-@synthesize rowEdgeInsets=_rowEdgeInsets;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -49,7 +47,7 @@ NSString * const kVHMenuItems = @"items";
 		_tableView.dataSource = self;
 		_tableView.backgroundColor = [UIColor clearColor];
 		_tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-		foldableRows = [NSMutableDictionary dictionary];
+		_foldableRows = [NSMutableDictionary dictionary];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(menuFoldingChanged:) name:VHMenuOpenNotification object:nil];
     }
     return self;
@@ -74,29 +72,29 @@ NSString * const kVHMenuItems = @"items";
 {
 	id opening = (note.userInfo)[kVHMenuOpening];
 	id identifier = (note.userInfo)[kVHMenuIdentifier];
-	foldableRows[identifier] = opening;
+	_foldableRows[identifier] = opening;
 	
 	__block NSDictionary *config = nil;
-	[configuration enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+	[self.configuration enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
 		if ([obj[kVHMenuIdentifier] isEqualToString:identifier]) {
 			*stop = YES;
 			config = obj;
 		}
 	}];
-	NSUInteger startRow = [currentRows indexOfObject:config] + 1;
+	NSUInteger startRow = [_currentRows indexOfObject:config] + 1;
 	NSArray *subitems = config[kVHMenuItems];
 	[_tableView beginUpdates];
 	if ([opening boolValue]) {
 		NSMutableArray *indexPaths = [NSMutableArray array];
 		for (int i = 0; i < subitems.count; i++) {
 			NSUInteger row = startRow + i;
-			[currentRows insertObject:subitems[i] atIndex:row];
+			[_currentRows insertObject:subitems[i] atIndex:row];
 			[indexPaths addObject:[NSIndexPath indexPathForRow:row inSection:0]];
 		}
 		[_tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:_rowAnimation];
 	} else {
 		NSMutableArray *indexPaths = [NSMutableArray array];
-		[currentRows removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(startRow, subitems.count)]];
+		[_currentRows removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(startRow, subitems.count)]];
 		for (int i = 0; i < subitems.count; i++) {
 			NSUInteger row = startRow + i;
 			[indexPaths addObject:[NSIndexPath indexPathForRow:row inSection:0]];
@@ -106,33 +104,135 @@ NSString * const kVHMenuItems = @"items";
 	[_tableView endUpdates];
 }
 
-- (void)loadFromConfiguration:(NSArray *)_configuration
+- (NSArray *)_insertItem:(NSDictionary *)obj atIndex:(NSUInteger)idx
 {
-	[foldableRows removeAllObjects];
-	configuration = _configuration;
-	currentRows = [NSMutableArray arrayWithArray:configuration];
-	
-	[configuration enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+	NSMutableArray *indexPaths = [@[] mutableCopy];
+	[_currentRows insertObject:obj atIndex:idx];
+	[indexPaths addObject:[NSIndexPath indexPathForRow:idx inSection:0]];
+	NSArray *subitems = obj[kVHMenuItems];
+	NSString *identifier = obj[kVHMenuIdentifier];
+	if (subitems && identifier) {
+		BOOL opening = [obj[@"itemsOpened"] boolValue];
+		_foldableRows[identifier] = @(opening);
+		if (opening) {
+			for (int i = 0; i < subitems.count; i++) {
+				NSUInteger row = idx + i;
+				[_currentRows insertObject:subitems[i] atIndex:row];
+				[indexPaths addObject:[NSIndexPath indexPathForRow:row inSection:0]];
+			}
+		}
+	}
+	return indexPaths;
+}
+
+- (NSArray *)_deleteItemAtIndex:(NSUInteger)idx
+{
+	NSMutableArray *indexPaths = [@[] mutableCopy];
+	if (_currentRows.count > idx) {
+		NSDictionary *obj = _currentRows[idx];
 		NSArray *subitems = obj[kVHMenuItems];
 		NSString *identifier = obj[kVHMenuIdentifier];
 		if (subitems && identifier) {
-			BOOL opening = [obj[@"itemsOpened"] boolValue];
-			foldableRows[identifier] = @(opening);
-			if (opening) [currentRows addObjectsFromArray:subitems];
+			if ([_foldableRows[identifier] boolValue]) {
+				[_currentRows removeObjectsInRange:NSMakeRange(idx + 1, subitems.count)];
+				for (int i = 0; i < subitems.count; i++) {
+					[indexPaths addObject:[NSIndexPath indexPathForRow:idx + 1 + i inSection:0]];
+				}
+			}
 		}
+		[_currentRows removeObjectAtIndex:idx];
+		[indexPaths addObject:[NSIndexPath indexPathForRow:idx inSection:0]];
+	}
+	return indexPaths;
+}
+
+- (void)setItems:(NSArray *)configuration
+{
+	[_foldableRows removeAllObjects];
+	_configuration = [configuration mutableCopy];
+	_currentRows = [@[] mutableCopy];
+	
+	[configuration enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+		[self _insertItem:obj atIndex:_currentRows.count];
 	}];
+	
 	[_tableView reloadData];
+}
+
+- (void)insertItem:(NSDictionary *)item atRow:(NSUInteger)row
+{
+	if (!_inBatchUpdates) [_tableView beginUpdates];
+	
+	NSUInteger relativeRow = 0;
+	if (_configuration.count > row) {
+		relativeRow = [_currentRows indexOfObject:_configuration[row]];
+	}
+	[_configuration insertObject:item atIndex:row];
+	NSArray *paths = [self _insertItem:item atIndex:relativeRow];
+	[_tableView insertRowsAtIndexPaths:paths withRowAnimation:_rowAnimation];
+	
+	if (!_inBatchUpdates) [_tableView endUpdates];
+}
+
+- (void)deleteItemAtRow:(NSUInteger)row
+{
+	if (!_inBatchUpdates) [_tableView beginUpdates];
+	
+	if (_configuration.count > row) {
+		NSUInteger relativeRow = [_currentRows indexOfObject:_configuration[row]];
+		[_configuration removeObjectAtIndex:row];
+		NSArray *paths = [self _deleteItemAtIndex:relativeRow];
+		[_tableView deleteRowsAtIndexPaths:paths withRowAnimation:_rowAnimation];
+	}
+	
+	if (!_inBatchUpdates) [_tableView endUpdates];
+}
+
+- (void)replaceItemAtRow:(NSUInteger)row withItem:(NSDictionary *)item
+{
+	if (!_inBatchUpdates) [_tableView beginUpdates];
+	
+	if (_configuration.count > row) {
+		NSUInteger relativeRow = [_currentRows indexOfObject:_configuration[row]];
+		[_configuration replaceObjectAtIndex:row withObject:item];
+		NSArray *_deletePaths = [self _deleteItemAtIndex:relativeRow];
+		NSArray *_insertPaths = [self _insertItem:item atIndex:relativeRow];
+		NSMutableArray *deletePaths = [_deletePaths mutableCopy];
+		NSMutableArray *insertPaths = [_insertPaths mutableCopy];
+		NSMutableArray *updatePaths = [@[] mutableCopy];
+		for (NSIndexPath *path in _insertPaths) {
+			if ([_deletePaths containsObject:path]) {
+				[updatePaths addObject:path];
+				[deletePaths removeObject:path];
+				[insertPaths removeObject:path];
+			}
+		}
+		if (updatePaths.count) [_tableView reloadRowsAtIndexPaths:updatePaths withRowAnimation:_rowAnimation];
+		if (deletePaths.count) [_tableView deleteRowsAtIndexPaths:deletePaths withRowAnimation:_rowAnimation];
+		if (insertPaths.count) [_tableView insertRowsAtIndexPaths:insertPaths withRowAnimation:_rowAnimation];
+	}
+	
+	if (!_inBatchUpdates) [_tableView endUpdates];
+}
+
+- (void)performBatchUpdates:(dispatch_block_t)updates
+{
+	[_tableView beginUpdates];
+	_inBatchUpdates = YES;
+	updates();
+	_inBatchUpdates = NO;
+	[_tableView endUpdates];
 }
 
 #pragma mark - UITableView Delegate & DataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-	return currentRows ? 1 : 0;
+	return _currentRows ? 1 : 0;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-	return currentRows.count;
+	return _currentRows.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -141,19 +241,18 @@ NSString * const kVHMenuItems = @"items";
 	VHMenuCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 	if (!cell) {
 		cell = [[VHMenuCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+		CGRect frame = cell.contentView.bounds;
+		//imageview
+		CGFloat r = tableView.rowHeight - _rowEdgeInsets.top - _rowEdgeInsets.bottom;
+		cell.imageView.frame = CGRectMake(_rowEdgeInsets.left, _rowEdgeInsets.top, r, r);
+		//textlabel
+		CGFloat x = r + _rowEdgeInsets.left * 2;
+		cell.rightView.frame = cell.textLabel.frame = CGRectMake(x, _rowEdgeInsets.top, frame.size.width - _rowEdgeInsets.right - x, r);
+		cell.textLabel.textColor = _textColor;
+		cell.textLabel.highlightedTextColor = _highlightedTextColor;
+		cell.textLabel.shadowOffset = _textShadowOffset;
 	}
-	CGRect frame = cell.contentView.bounds;
-	//imageview
-	CGFloat r = tableView.rowHeight - _rowEdgeInsets.top - _rowEdgeInsets.bottom;
-	cell.imageView.frame = CGRectMake(_rowEdgeInsets.left, _rowEdgeInsets.top, r, r);
-	
-	//textlabel
-	CGFloat x = r + _rowEdgeInsets.left * 2;
-	cell.rightView.frame = cell.textLabel.frame = CGRectMake(x, _rowEdgeInsets.top, frame.size.width - _rowEdgeInsets.right - x, r);
-	cell.textLabel.textColor = _textColor;
-	cell.textLabel.highlightedTextColor = _highlightedTextColor;
-	cell.textLabel.shadowOffset = _textShadowOffset;
-	NSDictionary *row = currentRows[indexPath.row];
+	NSDictionary *row = _currentRows[indexPath.row];
 	//indent
 	NSUInteger indent = [row[@"indent"] integerValue];
 	if ([self.delegate respondsToSelector:@selector(menuView:fontForTextAtIndent:)]) {
@@ -196,7 +295,7 @@ NSString * const kVHMenuItems = @"items";
 		}
 	}
 	if (subitems && identifier) {
-		BOOL opening = [foldableRows[identifier] boolValue];
+		BOOL opening = [_foldableRows[identifier] boolValue];
 		[rightViews addObject:@{
 				  kVHMenuType:@"VHMenuFoldButton",
 			kVHMenuIdentifier:identifier,
@@ -217,11 +316,11 @@ NSString * const kVHMenuItems = @"items";
 		[[tableView cellForRowAtIndexPath:indexPathOfSelectedRow] setSelected:NO animated:YES];
 		indexPathOfSelectedRow = nil;
 	}
-	NSDictionary *row = currentRows[indexPath.row];
+	NSDictionary *row = _currentRows[indexPath.row];
 	NSArray *subitems = row[kVHMenuItems];
 	NSString *identifier = row[kVHMenuIdentifier];
 	if (subitems && identifier) {
-		BOOL opening = ![foldableRows[identifier] boolValue];
+		BOOL opening = ![_foldableRows[identifier] boolValue];
 		[[NSNotificationCenter defaultCenter] postNotificationName:VHMenuOpenNotification
 															object:nil
 														  userInfo:@{
@@ -245,7 +344,7 @@ NSString * const kVHMenuItems = @"items";
 		selectedIdentifier = identifier;
 		if (everLayedout) {
 			int idx = 0;
-			for (NSDictionary *row in currentRows) {
+			for (NSDictionary *row in _currentRows) {
 				if ([row[kVHMenuIdentifier] isEqualToString:selectedIdentifier]) {
 					[_tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:idx inSection:0] animated:NO scrollPosition:UITableViewRowAnimationNone];
 					break;
@@ -259,7 +358,7 @@ NSString * const kVHMenuItems = @"items";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	NSDictionary *row = currentRows[indexPath.row];
+	NSDictionary *row = _currentRows[indexPath.row];
 	NSString *identifier = row[kVHMenuIdentifier];
 	if (identifier) {
 		if ([self.delegate respondsToSelector:@selector(menuView:didSelectedItemWithIdentifier:)]) {
