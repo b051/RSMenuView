@@ -194,7 +194,7 @@ NSString * const kVHMenuItems = @"items";
 	
 	if (_configuration.count > row) {
 		NSUInteger relativeRow = [_currentRows indexOfObject:_configuration[row]];
-		[_configuration replaceObjectAtIndex:row withObject:item];
+		_configuration[row] = item;
 		NSArray *_deletePaths = [self _deleteItemAtIndex:relativeRow];
 		NSArray *_insertPaths = [self _insertItem:item atIndex:relativeRow];
 		NSMutableArray *deletePaths = [_deletePaths mutableCopy];
