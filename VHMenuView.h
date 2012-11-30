@@ -12,7 +12,6 @@
 @protocol VHMenuViewDelegate <NSObject>
 
 @optional
-- (UIFont *)menuView:(VHMenuView *)menuView fontForTextAtIndent:(NSUInteger)indent;
 - (void)menuView:(VHMenuView *)menuView didSelectedItemWithIdentifier:(NSString *)identifier;
 - (NSDictionary *)menuView:(VHMenuView *)menuView attributesForItemWithIdentifier:(NSString *)identifier;
 
@@ -36,6 +35,9 @@
 - (void)deleteItemAtRow:(NSUInteger)row;
 - (void)replaceItemAtRow:(NSUInteger)row withItem:(NSDictionary *)item;
 - (void)performBatchUpdates:(dispatch_block_t)updates;
+
+- (void)setTextFont:(UIFont *)font forIndent:(NSUInteger)indent UI_APPEARANCE_SELECTOR;
+- (UIFont *)textFontForIndent:(NSUInteger)indent UI_APPEARANCE_SELECTOR;
 
 - (void)setItemSelectedWithIdentifier:(NSString *)identifier;
 

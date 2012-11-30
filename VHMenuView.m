@@ -31,6 +31,20 @@ NSString * const kVHMenuItems = @"items";
 	__unsafe_unretained Class cellClass;
 	BOOL everLayedout;
 	BOOL _inBatchUpdates;
+	NSMutableDictionary *textFonts;
+}
+
+- (void)setTextFont:(UIFont *)font forIndent:(NSUInteger)indent
+{
+	if (!textFonts) {
+		textFonts = [@{} mutableCopy];
+	}
+	textFonts[@(indent)] = font;
+}
+
+- (UIFont *)textFontForIndent:(NSUInteger)indent
+{
+	return textFonts[@(indent)];
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -255,15 +269,9 @@ NSString * const kVHMenuItems = @"items";
 	NSDictionary *row = _currentRows[indexPath.row];
 	//indent
 	NSUInteger indent = [row[@"indent"] integerValue];
-	if ([self.delegate respondsToSelector:@selector(menuView:fontForTextAtIndent:)]) {
-		cell.textLabel.font = [self.delegate menuView:self fontForTextAtIndent:indent];
-	}
+	cell.textLabel.font = [self textFontForIndent:indent];
 	[(VHRowBackgroundView *)cell.backgroundView setHighlighted:indent == 0];
-	
-	//title
 	cell.textLabel.text = row[@"title"];
-	
-	//leftviews
 	NSString *leftview = row[@"leftview"];
 	if (leftview) {
 		cell.imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@_active", leftview]];
