@@ -1,15 +1,15 @@
 //
-//  VHMenuCompose.m
+//  RSMenuButton.m
 //
 //  Created by Rex Sheng on 10/16/12.
 //  Copyright (c) 2012 Log(n) LLC. All rights reserved.
 //
 
-#import "VHMenuButton.h"
+#import "RSMenuButton.h"
 
-NSString * const VHMenuButtonClickedNotificationName = @"VHMenuButtonClickedNotification";
+NSString * const RSMenuButtonClickedNotificationName = @"RSMenuButtonClickedNotification";
 
-@implementation VHMenuButton
+@implementation RSMenuButton
 {
 	NSString *identifier;
 }
@@ -32,7 +32,7 @@ NSString * const VHMenuButtonClickedNotificationName = @"VHMenuButtonClickedNoti
 - (void)buttonClicked:(id)sender
 {
 	if (identifier) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:VHMenuButtonClickedNotificationName object:identifier];
+		[[NSNotificationCenter defaultCenter] postNotificationName:RSMenuButtonClickedNotificationName object:identifier];
 	}
 }
 

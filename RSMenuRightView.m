@@ -1,17 +1,17 @@
 //
-//  VHMenuRightView.m
+//  RSMenuRightView.m
 //
 //  Created by Rex Sheng on 10/16/12.
 //  Copyright (c) 2012 Log(n) LLC. All rights reserved.
 //
 
-#import "VHMenuRightView.h"
-#import "VHMenuRightViewInfo.h"
+#import "RSMenuRightView.h"
+#import "RSMenuRightViewInfo.h"
 
-NSString * const kVHMenuType = @"type";
-NSString * const kVHMenuIdentifier = @"identifier";
+NSString * const kRSMenuType = @"type";
+NSString * const kRSMenuIdentifier = @"identifier";
 
-@implementation VHMenuRightView
+@implementation RSMenuRightView
 
 - (void)layoutSubviews
 {
@@ -40,9 +40,9 @@ NSString * const kVHMenuIdentifier = @"identifier";
 	NSEnumerator *enumerator = [items reverseObjectEnumerator];
 	
 	while (item = [enumerator nextObject]) {
-		Class clazz = NSClassFromString(item[kVHMenuType]);
-		if ([clazz conformsToProtocol:@protocol(VHMenuRightViewInfo)]) {
-			NSString *identifier = item[kVHMenuIdentifier];
+		Class clazz = NSClassFromString(item[kRSMenuType]);
+		if ([clazz conformsToProtocol:@protocol(RSMenuRightViewInfo)]) {
+			NSString *identifier = item[kRSMenuIdentifier];
 			UIView *view = [[clazz alloc] initWithIdentifier:identifier attributes:item];
 			[self addSubview:view];
 		}

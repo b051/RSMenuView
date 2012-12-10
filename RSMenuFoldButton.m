@@ -1,17 +1,17 @@
 //
-//  VHMenuFoldButton.m
+//  RSMenuFoldButton.m
 //
 //  Created by Rex Sheng on 10/17/12.
 //  Copyright (c) 2012 Log(n) LLC. All rights reserved.
 //
 
-#import "VHMenuFoldButton.h"
-#import "VHMenuRightView.h"
+#import "RSMenuFoldButton.h"
+#import "RSMenuRightView.h"
 
-NSString * const kVHMenuOpening = @"opening";
-NSString * const VHMenuOpenNotification = @"VHMenuOpenNotification";
+NSString * const kRSMenuOpening = @"opening";
+NSString * const RSMenuOpenNotification = @"RSMenuOpenNotification";
 
-@implementation VHMenuFoldButton
+@implementation RSMenuFoldButton
 {
 	NSString *identifier;
 	BOOL opening;
@@ -26,11 +26,11 @@ NSString * const VHMenuOpenNotification = @"VHMenuOpenNotification";
 		button = [UIButton buttonWithType:UIButtonTypeCustom];
 		UIImage *icon = [UIImage imageNamed:@"menu_arrow"];
 		[button addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
-		opening = [attributes[kVHMenuOpening] boolValue];
+		opening = [attributes[kRSMenuOpening] boolValue];
 		
-		observer = [[NSNotificationCenter defaultCenter] addObserverForName:VHMenuOpenNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
-			if ([note.userInfo[kVHMenuIdentifier] isEqualToString:identifier]) {
-				BOOL status = [note.userInfo[kVHMenuOpening] boolValue];
+		observer = [[NSNotificationCenter defaultCenter] addObserverForName:RSMenuOpenNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+			if ([note.userInfo[kRSMenuIdentifier] isEqualToString:identifier]) {
+				BOOL status = [note.userInfo[kRSMenuOpening] boolValue];
 				[UIView animateWithDuration:.3 animations:^{
 					button.transform = CGAffineTransformMakeRotation(status ? 0 : -M_PI_2);
 				}];
@@ -57,7 +57,7 @@ NSString * const VHMenuOpenNotification = @"VHMenuOpenNotification";
 {
 	opening = !opening;
 	if (identifier) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:VHMenuOpenNotification object:self userInfo:@{kVHMenuOpening: @(opening), kVHMenuIdentifier: identifier}];
+		[[NSNotificationCenter defaultCenter] postNotificationName:RSMenuOpenNotification object:self userInfo:@{kRSMenuOpening: @(opening), kRSMenuIdentifier: identifier}];
 	}
 }
 

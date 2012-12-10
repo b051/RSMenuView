@@ -1,29 +1,29 @@
 //
-//  VHMenuView.m
+//  RSMenuView.m
 //
 //  Created by Rex Sheng on 10/16/12.
 //  Copyright (c) 2012 Log(n) LLC. All rights reserved.
 //
 
-#import "VHMenuView.h"
-#import "VHMenuFoldButton.h"
-#import "VHRowBackgroundView.h"
-#import "VHMenuCell.h"
+#import "RSMenuView.h"
+#import "RSMenuFoldButton.h"
+#import "RSRowBackgroundView.h"
+#import "RSMenuCell.h"
 
-NSString * const kVHMenuTitle = @"title";
-NSString * const kVHMenuLeftView = @"leftview";
-NSString * const kVHMenuRightViews = @"rightviews";
-NSString * const kVHMenuItems = @"items";
+NSString * const kRSMenuTitle = @"title";
+NSString * const kRSMenuLeftView = @"leftview";
+NSString * const kRSMenuRightViews = @"rightviews";
+NSString * const kRSMenuItems = @"items";
 
 
-#pragma mark - VHMenuView
-@interface VHMenuView () <UITableViewDataSource, UITableViewDelegate>
+#pragma mark - RSMenuView
+@interface RSMenuView () <UITableViewDataSource, UITableViewDelegate>
 @property (nonatomic, strong) NSMutableArray *configuration;
 @property (nonatomic, strong) NSMutableArray *currentRows;
 @property (nonatomic, strong) NSMutableDictionary *foldableRows;
 @end
 
-@implementation VHMenuView
+@implementation RSMenuView
 {
 	UITableView *_tableView;
 	NSString *selectedIdentifier;
@@ -50,7 +50,7 @@ NSString * const kVHMenuItems = @"items";
 - (id)initWithFrame:(CGRect)frame
 {
 	if (self = [super initWithFrame:frame]) {
-		cellClass = [VHMenuCell class];
+		cellClass = [RSMenuCell class];
 		self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		_tableView = [[UITableView alloc] initWithFrame:self.bounds style:UITableViewStylePlain];
 		_tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -62,7 +62,7 @@ NSString * const kVHMenuItems = @"items";
 		_tableView.backgroundColor = [UIColor clearColor];
 		_tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 		_foldableRows = [NSMutableDictionary dictionary];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(menuFoldingChanged:) name:VHMenuOpenNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(menuFoldingChanged:) name:RSMenuOpenNotification object:nil];
     }
     return self;
 }
@@ -84,19 +84,19 @@ NSString * const kVHMenuItems = @"items";
 
 - (void)menuFoldingChanged:(NSNotification *)note
 {
-	id opening = (note.userInfo)[kVHMenuOpening];
-	id identifier = (note.userInfo)[kVHMenuIdentifier];
+	id opening = (note.userInfo)[kRSMenuOpening];
+	id identifier = (note.userInfo)[kRSMenuIdentifier];
 	_foldableRows[identifier] = opening;
 	
 	__block NSDictionary *config = nil;
 	[self.configuration enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-		if ([obj[kVHMenuIdentifier] isEqualToString:identifier]) {
+		if ([obj[kRSMenuIdentifier] isEqualToString:identifier]) {
 			*stop = YES;
 			config = obj;
 		}
 	}];
 	NSUInteger startRow = [_currentRows indexOfObject:config] + 1;
-	NSArray *subitems = config[kVHMenuItems];
+	NSArray *subitems = config[kRSMenuItems];
 	[_tableView beginUpdates];
 	if ([opening boolValue]) {
 		NSMutableArray *indexPaths = [NSMutableArray array];
@@ -123,8 +123,8 @@ NSString * const kVHMenuItems = @"items";
 	NSMutableArray *indexPaths = [@[] mutableCopy];
 	[_currentRows insertObject:obj atIndex:idx];
 	[indexPaths addObject:[NSIndexPath indexPathForRow:idx inSection:0]];
-	NSArray *subitems = obj[kVHMenuItems];
-	NSString *identifier = obj[kVHMenuIdentifier];
+	NSArray *subitems = obj[kRSMenuItems];
+	NSString *identifier = obj[kRSMenuIdentifier];
 	if (subitems && identifier) {
 		BOOL opening = [obj[@"itemsOpened"] boolValue];
 		_foldableRows[identifier] = @(opening);
@@ -144,8 +144,8 @@ NSString * const kVHMenuItems = @"items";
 	NSMutableArray *indexPaths = [@[] mutableCopy];
 	if (_currentRows.count > idx) {
 		NSDictionary *obj = _currentRows[idx];
-		NSArray *subitems = obj[kVHMenuItems];
-		NSString *identifier = obj[kVHMenuIdentifier];
+		NSArray *subitems = obj[kRSMenuItems];
+		NSString *identifier = obj[kRSMenuIdentifier];
 		if (subitems && identifier) {
 			if ([_foldableRows[identifier] boolValue]) {
 				[_currentRows removeObjectsInRange:NSMakeRange(idx + 1, subitems.count)];
@@ -251,10 +251,10 @@ NSString * const kVHMenuItems = @"items";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	static NSString *cellIdentifier = @"VHMenuCell";
-	VHMenuCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+	static NSString *cellIdentifier = @"RSMenuCell";
+	RSMenuCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 	if (!cell) {
-		cell = [[VHMenuCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+		cell = [[RSMenuCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 		CGRect frame = cell.contentView.bounds;
 		//imageview
 		CGFloat r = tableView.rowHeight - _rowEdgeInsets.top - _rowEdgeInsets.bottom;
@@ -270,7 +270,7 @@ NSString * const kVHMenuItems = @"items";
 	//indent
 	NSUInteger indent = [row[@"indent"] integerValue];
 	cell.textLabel.font = [self textFontForIndent:indent];
-	[(VHRowBackgroundView *)cell.backgroundView setHighlighted:indent == 0];
+	[(RSRowBackgroundView *)cell.backgroundView setHighlighted:indent == 0];
 	cell.textLabel.text = row[@"title"];
 	NSString *leftview = row[@"leftview"];
 	if (leftview) {
@@ -280,14 +280,14 @@ NSString * const kVHMenuItems = @"items";
 		cell.imageView.image = nil;
 	}
 	//rightviews
-	NSArray *subitems = row[kVHMenuItems];
-	NSArray *rightViewsConfiguration = row[kVHMenuRightViews];
-	NSString *identifier = row[kVHMenuIdentifier];
+	NSArray *subitems = row[kRSMenuItems];
+	NSArray *rightViewsConfiguration = row[kRSMenuRightViews];
+	NSString *identifier = row[kRSMenuIdentifier];
 	
 	NSMutableArray *rightViews = [NSMutableArray array];
 	if (rightViewsConfiguration) {
 		for (NSDictionary *config in rightViewsConfiguration) {
-			id rid = config[kVHMenuIdentifier];
+			id rid = config[kRSMenuIdentifier];
 			if ([self.delegate respondsToSelector:@selector(menuView:attributesForItemWithIdentifier:)]) {
 				NSDictionary *attributes = [self.delegate menuView:self attributesForItemWithIdentifier:rid];
 				if (attributes) {
@@ -305,9 +305,9 @@ NSString * const kVHMenuItems = @"items";
 	if (subitems && identifier) {
 		BOOL opening = [_foldableRows[identifier] boolValue];
 		[rightViews addObject:@{
-				  kVHMenuType:@"VHMenuFoldButton",
-			kVHMenuIdentifier:identifier,
-			   kVHMenuOpening:@(opening)
+				  kRSMenuType:@"RSMenuFoldButton",
+			kRSMenuIdentifier:identifier,
+			   kRSMenuOpening:@(opening)
 		 }];
 	}
 	[cell.rightView loadItems:rightViews];
@@ -325,15 +325,15 @@ NSString * const kVHMenuItems = @"items";
 		indexPathOfSelectedRow = nil;
 	}
 	NSDictionary *row = _currentRows[indexPath.row];
-	NSArray *subitems = row[kVHMenuItems];
-	NSString *identifier = row[kVHMenuIdentifier];
+	NSArray *subitems = row[kRSMenuItems];
+	NSString *identifier = row[kRSMenuIdentifier];
 	if (subitems && identifier) {
 		BOOL opening = ![_foldableRows[identifier] boolValue];
-		[[NSNotificationCenter defaultCenter] postNotificationName:VHMenuOpenNotification
+		[[NSNotificationCenter defaultCenter] postNotificationName:RSMenuOpenNotification
 															object:nil
 														  userInfo:@{
-													kVHMenuOpening:@(opening),
-												 kVHMenuIdentifier:identifier}];
+													kRSMenuOpening:@(opening),
+												 kRSMenuIdentifier:identifier}];
 		return nil;
 	}
 	indexPathOfSelectedRow = indexPath;
@@ -353,7 +353,7 @@ NSString * const kVHMenuItems = @"items";
 		if (everLayedout) {
 			int idx = 0;
 			for (NSDictionary *row in _currentRows) {
-				if ([row[kVHMenuIdentifier] isEqualToString:selectedIdentifier]) {
+				if ([row[kRSMenuIdentifier] isEqualToString:selectedIdentifier]) {
 					[_tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:idx inSection:0] animated:NO scrollPosition:UITableViewRowAnimationNone];
 					break;
 				}
@@ -367,7 +367,7 @@ NSString * const kVHMenuItems = @"items";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	NSDictionary *row = _currentRows[indexPath.row];
-	NSString *identifier = row[kVHMenuIdentifier];
+	NSString *identifier = row[kRSMenuIdentifier];
 	if (identifier) {
 		if ([self.delegate respondsToSelector:@selector(menuView:didSelectedItemWithIdentifier:)]) {
 			selectedIdentifier = identifier;

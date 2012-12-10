@@ -1,5 +1,5 @@
 //
-//  VHMenuView.h
+//  RSMenuView.h
 //
 //  Created by Rex Sheng on 10/16/12.
 //  Copyright (c) 2012 Log(n) LLC. All rights reserved.
@@ -7,17 +7,17 @@
 
 #import <UIKit/UIKit.h>
 
-@class VHMenuView;
+@class RSMenuView;
 
-@protocol VHMenuViewDelegate <NSObject>
+@protocol RSMenuViewDelegate <NSObject>
 
 @optional
-- (void)menuView:(VHMenuView *)menuView didSelectedItemWithIdentifier:(NSString *)identifier;
-- (NSDictionary *)menuView:(VHMenuView *)menuView attributesForItemWithIdentifier:(NSString *)identifier;
+- (void)menuView:(RSMenuView *)menuView didSelectedItemWithIdentifier:(NSString *)identifier;
+- (NSDictionary *)menuView:(RSMenuView *)menuView attributesForItemWithIdentifier:(NSString *)identifier;
 
 @end
 
-@interface VHMenuView : UIView
+@interface RSMenuView : UIView
 
 @property (nonatomic) UITableViewRowAnimation rowAnimation;
 @property (nonatomic, strong) UIColor *textColor UI_APPEARANCE_SELECTOR;
@@ -28,7 +28,7 @@
 
 @property (nonatomic) CGSize textShadowOffset UI_APPEARANCE_SELECTOR;
 
-@property (nonatomic, weak) id<VHMenuViewDelegate> delegate;
+@property (nonatomic, weak) id<RSMenuViewDelegate> delegate;
 
 - (void)setItems:(NSArray *)configuration;
 - (void)insertItem:(NSDictionary *)item atRow:(NSUInteger)row;

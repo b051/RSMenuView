@@ -1,24 +1,24 @@
 //
-//  VHMenuCell.m
+//  RSMenuCell.m
 //
 //  Created by Rex Sheng on 10/17/12.
 //  Copyright (c) 2012 Log(n) LLC. All rights reserved.
 //
 
-#import "VHMenuCell.h"
-#import "VHRowBackgroundView.h"
+#import "RSMenuCell.h"
+#import "RSRowBackgroundView.h"
 
-@implementation VHMenuCell
+@implementation RSMenuCell
 
 @synthesize selected, highlighted;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
 	if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
-		self.backgroundView = [[VHRowBackgroundView alloc] initWithFrame:self.contentView.bounds];
-		self.selectedBackgroundView = [[VHRowBackgroundView alloc] initWithFrame:self.contentView.bounds];
+		self.backgroundView = [[RSRowBackgroundView alloc] initWithFrame:self.contentView.bounds];
+		self.selectedBackgroundView = [[RSRowBackgroundView alloc] initWithFrame:self.contentView.bounds];
 		self.imageView.contentMode = UIViewContentModeCenter;
-		_rightView = [[VHMenuRightView alloc] initWithFrame:self.contentView.bounds];
+		_rightView = [[RSMenuRightView alloc] initWithFrame:self.contentView.bounds];
 		self.rightView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleLeftMargin;
 		[self.contentView addSubview:_rightView];
 	}
