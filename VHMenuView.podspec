@@ -8,12 +8,12 @@
 #
 Pod::Spec.new do |s|
   s.name         = "VHMenuView"
-  s.version      = "1.0.0"
+  s.version      = "0.5"
   s.summary      = "a menu can be configured from plist."
   s.homepage     = "https://github.com/b051/VHMenuView"
-  s.license      = 'MIT'
+  s.license      = { :type => 'MIT', :file => 'LICENSE' }l
   s.author       = { "Sheng Ning" => "shengning@gmail.com" }
-  s.source       = { :git => "https://github.com/b051/VHMenuView.git", :tag => "1.0.0" }
+  s.source       = { :git => "https://github.com/b051/VHMenuView.git", :tag => "0.5" }
   s.platform     = :ios, '5.0'
   s.source_files = '*.{h,m}'
   s.resources = "Resources/*.png"
