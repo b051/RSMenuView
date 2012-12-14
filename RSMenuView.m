@@ -368,7 +368,7 @@ NSString * const kRSMenuItems = @"items";
 	NSDictionary *row = _currentRows[indexPath.row];
 	NSString *identifier = row[kRSMenuIdentifier];
 	if (identifier) {
-		if ([self.delegate respondsToSelector:@selector(menuView:didSelectedItemWithIdentifier:)]) {
+		if ([self.delegate respondsToSelector:@selector(menuView:didSelectItemWithIdentifier:)]) {
 			selectedIdentifier = identifier;
 			[self.delegate menuView:self didSelectItemWithIdentifier:identifier];
 		}
