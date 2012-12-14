@@ -11,7 +11,6 @@
 @interface RSMenuCell : UITableViewCell
 
 @property (nonatomic, strong) RSMenuRightView *rightView;
-
 @property (nonatomic, strong) UIColor *selectedTextShadowColor UI_APPEARANCE_SELECTOR;
 @property (nonatomic, strong) UIColor *textShadowColor UI_APPEARANCE_SELECTOR;
 

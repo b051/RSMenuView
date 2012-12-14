@@ -9,15 +9,16 @@
 
 NSString * const RSMenuButtonClickedNotificationName = @"RSMenuButtonClickedNotification";
 
-@implementation RSMenuButton
-{
-	NSString *identifier;
-}
+@interface RSMenuButton ()
+@property (nonatomic, copy) NSString *identifier;
+@end
 
-- (id)initWithIdentifier:(NSString *)_identifier attributes:(NSDictionary *)attributes
+@implementation RSMenuButton
+
+- (id)initWithIdentifier:(NSString *)identifier attributes:(NSDictionary *)attributes
 {
 	if (self = [super initWithFrame:CGRectZero]) {
-		identifier = _identifier;
+		self.identifier = identifier;
 		UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
 		UIImage *icon = [UIImage imageNamed:attributes[@"image"]];
 		[button addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -31,8 +32,8 @@ NSString * const RSMenuButtonClickedNotificationName = @"RSMenuButtonClickedNoti
 
 - (void)buttonClicked:(id)sender
 {
-	if (identifier) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:RSMenuButtonClickedNotificationName object:identifier];
+	if (_identifier) {
+		[[NSNotificationCenter defaultCenter] postNotificationName:RSMenuButtonClickedNotificationName object:_identifier];
 	}
 }
 

@@ -12,7 +12,7 @@
 @protocol RSMenuViewDelegate <NSObject>
 
 @optional
-- (void)menuView:(RSMenuView *)menuView didSelectedItemWithIdentifier:(NSString *)identifier;
+- (void)menuView:(RSMenuView *)menuView didSelectItemWithIdentifier:(NSString *)identifier;
 - (NSDictionary *)menuView:(RSMenuView *)menuView attributesForItemWithIdentifier:(NSString *)identifier;
 
 @end

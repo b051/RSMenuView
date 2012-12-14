@@ -15,7 +15,6 @@ NSString * const kRSMenuLeftView = @"leftview";
 NSString * const kRSMenuRightViews = @"rightviews";
 NSString * const kRSMenuItems = @"items";
 
-
 #pragma mark - RSMenuView
 @interface RSMenuView () <UITableViewDataSource, UITableViewDelegate>
 @property (nonatomic, strong) NSMutableArray *configuration;
@@ -287,8 +286,8 @@ NSString * const kRSMenuItems = @"items";
 	NSMutableArray *rightViews = [NSMutableArray array];
 	if (rightViewsConfiguration) {
 		for (NSDictionary *config in rightViewsConfiguration) {
-			id rid = config[kRSMenuIdentifier];
 			if ([self.delegate respondsToSelector:@selector(menuView:attributesForItemWithIdentifier:)]) {
+				id rid = config[kRSMenuIdentifier];
 				NSDictionary *attributes = [self.delegate menuView:self attributesForItemWithIdentifier:rid];
 				if (attributes) {
 					NSMutableDictionary *r = [config mutableCopy];
@@ -371,7 +370,7 @@ NSString * const kRSMenuItems = @"items";
 	if (identifier) {
 		if ([self.delegate respondsToSelector:@selector(menuView:didSelectedItemWithIdentifier:)]) {
 			selectedIdentifier = identifier;
-			[self.delegate menuView:self didSelectedItemWithIdentifier:identifier];
+			[self.delegate menuView:self didSelectItemWithIdentifier:identifier];
 		}
 	}
 }
