@@ -347,6 +347,11 @@ NSString * const kRSMenuItems = @"items";
 
 - (void)setItemSelectedWithIdentifier:(NSString *)identifier
 {
+	if (!identifier) {
+		[_tableView selectRowAtIndexPath:nil animated:NO scrollPosition:UITableViewRowAnimationNone];
+		return;
+	}
+
 	if (![selectedIdentifier isEqualToString:identifier]) {
 		selectedIdentifier = identifier;
 		if (everLayedout) {
