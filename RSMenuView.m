@@ -347,23 +347,19 @@ NSString * const kRSMenuItems = @"items";
 
 - (void)setItemSelectedWithIdentifier:(NSString *)identifier
 {
-	if (!identifier) {
-		[_tableView selectRowAtIndexPath:nil animated:NO scrollPosition:UITableViewRowAnimationNone];
-		return;
-	}
-
 	if (![selectedIdentifier isEqualToString:identifier]) {
 		selectedIdentifier = identifier;
 		if (everLayedout) {
 			int idx = 0;
+			NSIndexPath *selectIndexPath = nil;
 			for (NSDictionary *row in _currentRows) {
 				if ([row[kRSMenuIdentifier] isEqualToString:selectedIdentifier]) {
-					[_tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:idx inSection:0] animated:NO scrollPosition:UITableViewRowAnimationNone];
+					selectIndexPath = [NSIndexPath indexPathForRow:idx inSection:0];
 					break;
 				}
 				idx++;
 			}
-			
+			[_tableView selectRowAtIndexPath:selectIndexPath animated:NO scrollPosition:UITableViewRowAnimationNone];
 		}
 	}
 }
