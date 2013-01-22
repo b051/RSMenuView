@@ -9,12 +9,12 @@
 		leftview = "saved_view";
 		rightviews = (
 			{
-				type = VHMenuButton;
+				type = RSMenuButton;
 				image = "menu_options";
 				identifier = "saved[0].options";
 			},
 			{
-				type = VHMenuCount;
+				type = RSMenuCount;
 				identifier = "saved[0].count";
 			},
 		);
@@ -25,12 +25,12 @@
 		leftview = "saved_view";
 		rightviews = (
 			{
-				type = VHMenuButton;
+				type = RSMenuButton;
 				image = "menu_options";
 				identifier = "saved[1].options";
 			},
 			{
-				type = VHMenuCount;
+				type = RSMenuCount;
 				identifier = "saved[1].count";
 			},
 		);
@@ -41,7 +41,7 @@
 		title = Messages;
 		rightviews = (
 			{
-				type = VHMenuButton;
+				type = RSMenuButton;
 				image = "menu_compose";
 				identifier = "messages.compose";
 			},
@@ -54,7 +54,7 @@
 		indent = 1;
 		rightviews = (
 			{
-				type = VHMenuCount;
+				type = RSMenuCount;
 				identifier = "messages.scheduled.count";
 			},
 		);
@@ -66,7 +66,7 @@
 		indent = 1;
 		rightviews = (
 			{
-				type = VHMenuCount;
+				type = RSMenuCount;
 				identifier = "messages.sent.count";
 			},
 		);
@@ -100,7 +100,7 @@
 	},
 	{
 		leftview = help;
-		title = "Help Center";  
+		title = "Help Center";
 		identifier = help;
 	},
 )

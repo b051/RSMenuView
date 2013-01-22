@@ -1,5 +1,5 @@
 //
-//  VHMenuViewController.h
+//  RSMenuViewController.h
 //  viralheat
 //
 //  Created by Rex Sheng on 10/10/12.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface VHMenuViewController : UIViewController
+@interface RSMenuViewController : UIViewController
 
 @end

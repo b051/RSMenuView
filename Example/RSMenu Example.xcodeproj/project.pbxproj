@@ -1,0 +1,429 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		CF468180162EA175001E562C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF46817F162EA175001E562C /* UIKit.framework */; };
+		CF468182162EA175001E562C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF468181162EA175001E562C /* Foundation.framework */; };
+		CF468184162EA175001E562C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF468183162EA175001E562C /* CoreGraphics.framework */; };
+		CF46818A162EA175001E562C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CF468188162EA175001E562C /* InfoPlist.strings */; };
+		CF46818C162EA175001E562C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CF46818B162EA175001E562C /* main.m */; };
+		CF468190162EA175001E562C /* RSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CF46818F162EA175001E562C /* RSAppDelegate.m */; };
+		CF468192162EA175001E562C /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = CF468191162EA175001E562C /* Default.png */; };
+		CF468194162EA175001E562C /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CF468193162EA175001E562C /* Default@2x.png */; };
+		CF468196162EA175001E562C /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CF468195162EA175001E562C /* Default-568h@2x.png */; };
+		CF5BE45E162EA27300E0EE72 /* Menu.plist in Resources */ = {isa = PBXBuildFile; fileRef = CF5BE459162EA27300E0EE72 /* Menu.plist */; };
+		CF5BE460162EA27300E0EE72 /* RSMenuCount.m in Sources */ = {isa = PBXBuildFile; fileRef = CF5BE45B162EA27300E0EE72 /* RSMenuCount.m */; };
+		CF5BE462162EA27300E0EE72 /* RSMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CF5BE45D162EA27300E0EE72 /* RSMenuViewController.m */; };
+		CF5BE511162EA40300E0EE72 /* allstreams_active@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CF5BE465162EA40300E0EE72 /* allstreams_active@2x.png */; };
+		CF5BE515162EA40300E0EE72 /* allstreams_enabled@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CF5BE469162EA40300E0EE72 /* allstreams_enabled@2x.png */; };
+		CF5BE517162EA40300E0EE72 /* analytics_active@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CF5BE46B162EA40300E0EE72 /* analytics_active@2x.png */; };
+		CF5BE51B162EA40300E0EE72 /* analytics_enabled@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CF5BE46F162EA40300E0EE72 /* analytics_enabled@2x.png */; };
+		CF5BE54B162EA40300E0EE72 /* help_active@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CF5BE49F162EA40300E0EE72 /* help_active@2x.png */; };
+		CF5BE54F162EA40300E0EE72 /* help_enabled@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CF5BE4A3162EA40300E0EE72 /* help_enabled@2x.png */; };
+		CF5BE582162EA40300E0EE72 /* menu_compose@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CF5BE4D6162EA40300E0EE72 /* menu_compose@2x.png */; };
+		CF5BE584162EA40300E0EE72 /* menu_options@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CF5BE4D8162EA40300E0EE72 /* menu_options@2x.png */; };
+		CF5BE587162EA40300E0EE72 /* menu_pattern@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CF5BE4DB162EA40300E0EE72 /* menu_pattern@2x.png */; };
+		CF5BE589162EA40300E0EE72 /* menutray_pattern@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CF5BE4DD162EA40300E0EE72 /* menutray_pattern@2x.png */; };
+		CF5BE58E162EA40300E0EE72 /* message_active@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CF5BE4E2162EA40300E0EE72 /* message_active@2x.png */; };
+		CF5BE592162EA40300E0EE72 /* message_enabled@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CF5BE4E6162EA40300E0EE72 /* message_enabled@2x.png */; };
+		CF5BE59F162EA40300E0EE72 /* saved_view_active@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CF5BE4F3162EA40300E0EE72 /* saved_view_active@2x.png */; };
+		CF5BE5A3162EA40300E0EE72 /* saved_view_enabled@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CF5BE4F7162EA40300E0EE72 /* saved_view_enabled@2x.png */; };
+		CF5BE5A5162EA40300E0EE72 /* schedule_active@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CF5BE4F9162EA40300E0EE72 /* schedule_active@2x.png */; };
+		CF5BE5A9162EA40300E0EE72 /* schedule_enabled@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CF5BE4FD162EA40300E0EE72 /* schedule_enabled@2x.png */; };
+		CF5BE5AB162EA40300E0EE72 /* social_active@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CF5BE4FF162EA40300E0EE72 /* social_active@2x.png */; };
+		CF5BE5AF162EA40300E0EE72 /* social_enabled@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CF5BE503162EA40300E0EE72 /* social_enabled@2x.png */; };
+		CFF2C71416AE8E120077D072 /* RSMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = CFF2C70716AE8E120077D072 /* RSMenuView.m */; };
+		CFF2C71516AE8E120077D072 /* RSMenuCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CFF2C70816AE8E120077D072 /* RSMenuCell.m */; };
+		CFF2C71816AE8E120077D072 /* RSMenuButton.m in Sources */ = {isa = PBXBuildFile; fileRef = CFF2C70B16AE8E120077D072 /* RSMenuButton.m */; };
+		CFF2C71B16AE8E120077D072 /* RSMenuFoldButton.m in Sources */ = {isa = PBXBuildFile; fileRef = CFF2C70E16AE8E120077D072 /* RSMenuFoldButton.m */; };
+		CFF2C71D16AE8E120077D072 /* RSMenuRightView.m in Sources */ = {isa = PBXBuildFile; fileRef = CFF2C71016AE8E120077D072 /* RSMenuRightView.m */; };
+		CFF2C72016AE8E120077D072 /* RSRowBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = CFF2C71316AE8E120077D072 /* RSRowBackgroundView.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		CF46817B162EA175001E562C /* RSMenu Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "RSMenu Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CF46817F162EA175001E562C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		CF468181162EA175001E562C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		CF468183162EA175001E562C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		CF468187162EA175001E562C /* RSMenu Example-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "RSMenu Example-Info.plist"; sourceTree = "<group>"; };
+		CF468189162EA175001E562C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		CF46818B162EA175001E562C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		CF46818D162EA175001E562C /* RSMenu Example-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RSMenu Example-Prefix.pch"; sourceTree = "<group>"; };
+		CF46818E162EA175001E562C /* RSAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.objj.h; path = RSAppDelegate.h; sourceTree = "<group>"; };
+		CF46818F162EA175001E562C /* RSAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RSAppDelegate.m; sourceTree = "<group>"; };
+		CF468191162EA175001E562C /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		CF468193162EA175001E562C /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		CF468195162EA175001E562C /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		CF5BE459162EA27300E0EE72 /* Menu.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Menu.plist; sourceTree = "<group>"; };
+		CF5BE45A162EA27300E0EE72 /* RSMenuCount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.objj.h; path = RSMenuCount.h; sourceTree = "<group>"; };
+		CF5BE45B162EA27300E0EE72 /* RSMenuCount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSMenuCount.m; sourceTree = "<group>"; };
+		CF5BE45C162EA27300E0EE72 /* RSMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.objj.h; path = RSMenuViewController.h; sourceTree = "<group>"; };
+		CF5BE45D162EA27300E0EE72 /* RSMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSMenuViewController.m; sourceTree = "<group>"; };
+		CF5BE465162EA40300E0EE72 /* allstreams_active@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "allstreams_active@2x.png"; sourceTree = "<group>"; };
+		CF5BE469162EA40300E0EE72 /* allstreams_enabled@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "allstreams_enabled@2x.png"; sourceTree = "<group>"; };
+		CF5BE46B162EA40300E0EE72 /* analytics_active@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "analytics_active@2x.png"; sourceTree = "<group>"; };
+		CF5BE46F162EA40300E0EE72 /* analytics_enabled@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "analytics_enabled@2x.png"; sourceTree = "<group>"; };
+		CF5BE49F162EA40300E0EE72 /* help_active@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "help_active@2x.png"; sourceTree = "<group>"; };
+		CF5BE4A3162EA40300E0EE72 /* help_enabled@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "help_enabled@2x.png"; sourceTree = "<group>"; };
+		CF5BE4D6162EA40300E0EE72 /* menu_compose@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu_compose@2x.png"; sourceTree = "<group>"; };
+		CF5BE4D8162EA40300E0EE72 /* menu_options@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu_options@2x.png"; sourceTree = "<group>"; };
+		CF5BE4DB162EA40300E0EE72 /* menu_pattern@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu_pattern@2x.png"; sourceTree = "<group>"; };
+		CF5BE4DD162EA40300E0EE72 /* menutray_pattern@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menutray_pattern@2x.png"; sourceTree = "<group>"; };
+		CF5BE4E2162EA40300E0EE72 /* message_active@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "message_active@2x.png"; sourceTree = "<group>"; };
+		CF5BE4E6162EA40300E0EE72 /* message_enabled@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "message_enabled@2x.png"; sourceTree = "<group>"; };
+		CF5BE4F3162EA40300E0EE72 /* saved_view_active@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "saved_view_active@2x.png"; sourceTree = "<group>"; };
+		CF5BE4F7162EA40300E0EE72 /* saved_view_enabled@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "saved_view_enabled@2x.png"; sourceTree = "<group>"; };
+		CF5BE4F9162EA40300E0EE72 /* schedule_active@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "schedule_active@2x.png"; sourceTree = "<group>"; };
+		CF5BE4FD162EA40300E0EE72 /* schedule_enabled@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "schedule_enabled@2x.png"; sourceTree = "<group>"; };
+		CF5BE4FF162EA40300E0EE72 /* social_active@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "social_active@2x.png"; sourceTree = "<group>"; };
+		CF5BE503162EA40300E0EE72 /* social_enabled@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "social_enabled@2x.png"; sourceTree = "<group>"; };
+		CFF2C70716AE8E120077D072 /* RSMenuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSMenuView.m; sourceTree = "<group>"; };
+		CFF2C70816AE8E120077D072 /* RSMenuCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSMenuCell.m; sourceTree = "<group>"; };
+		CFF2C70916AE8E120077D072 /* RSMenuCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.objj.h; path = RSMenuCell.h; sourceTree = "<group>"; };
+		CFF2C70A16AE8E120077D072 /* RSMenuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.objj.h; path = RSMenuView.h; sourceTree = "<group>"; };
+		CFF2C70B16AE8E120077D072 /* RSMenuButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSMenuButton.m; sourceTree = "<group>"; };
+		CFF2C70C16AE8E120077D072 /* RSMenuButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.objj.h; path = RSMenuButton.h; sourceTree = "<group>"; };
+		CFF2C70D16AE8E120077D072 /* RSMenuFoldButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.objj.h; path = RSMenuFoldButton.h; sourceTree = "<group>"; };
+		CFF2C70E16AE8E120077D072 /* RSMenuFoldButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSMenuFoldButton.m; sourceTree = "<group>"; };
+		CFF2C70F16AE8E120077D072 /* RSMenuRightView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.objj.h; path = RSMenuRightView.h; sourceTree = "<group>"; };
+		CFF2C71016AE8E120077D072 /* RSMenuRightView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSMenuRightView.m; sourceTree = "<group>"; };
+		CFF2C71116AE8E120077D072 /* RSMenuRightViewInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.objj.h; path = RSMenuRightViewInfo.h; sourceTree = "<group>"; };
+		CFF2C71216AE8E120077D072 /* RSRowBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.objj.h; path = RSRowBackgroundView.h; sourceTree = "<group>"; };
+		CFF2C71316AE8E120077D072 /* RSRowBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSRowBackgroundView.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		CF468178162EA175001E562C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CF468180162EA175001E562C /* UIKit.framework in Frameworks */,
+				CF468182162EA175001E562C /* Foundation.framework in Frameworks */,
+				CF468184162EA175001E562C /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		CF468170162EA175001E562C = {
+			isa = PBXGroup;
+			children = (
+				CF468185162EA175001E562C /* RSMenu Example */,
+				CF5BE463162EA40300E0EE72 /* Resources */,
+				CF46819C162EA182001E562C /* Vendor */,
+				CF46817E162EA175001E562C /* Frameworks */,
+				CF46817C162EA175001E562C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		CF46817C162EA175001E562C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CF46817B162EA175001E562C /* RSMenu Example.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CF46817E162EA175001E562C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CF46817F162EA175001E562C /* UIKit.framework */,
+				CF468181162EA175001E562C /* Foundation.framework */,
+				CF468183162EA175001E562C /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		CF468185162EA175001E562C /* RSMenu Example */ = {
+			isa = PBXGroup;
+			children = (
+				CF5BE459162EA27300E0EE72 /* Menu.plist */,
+				CF5BE45A162EA27300E0EE72 /* RSMenuCount.h */,
+				CF5BE45B162EA27300E0EE72 /* RSMenuCount.m */,
+				CF5BE45C162EA27300E0EE72 /* RSMenuViewController.h */,
+				CF5BE45D162EA27300E0EE72 /* RSMenuViewController.m */,
+				CF46818E162EA175001E562C /* RSAppDelegate.h */,
+				CF46818F162EA175001E562C /* RSAppDelegate.m */,
+				CF468186162EA175001E562C /* Supporting Files */,
+			);
+			path = "RSMenu Example";
+			sourceTree = "<group>";
+		};
+		CF468186162EA175001E562C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				CF468187162EA175001E562C /* RSMenu Example-Info.plist */,
+				CF468188162EA175001E562C /* InfoPlist.strings */,
+				CF46818B162EA175001E562C /* main.m */,
+				CF46818D162EA175001E562C /* RSMenu Example-Prefix.pch */,
+				CF468191162EA175001E562C /* Default.png */,
+				CF468193162EA175001E562C /* Default@2x.png */,
+				CF468195162EA175001E562C /* Default-568h@2x.png */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		CF46819C162EA182001E562C /* Vendor */ = {
+			isa = PBXGroup;
+			children = (
+				CFF2C70C16AE8E120077D072 /* RSMenuButton.h */,
+				CFF2C70B16AE8E120077D072 /* RSMenuButton.m */,
+				CFF2C70916AE8E120077D072 /* RSMenuCell.h */,
+				CFF2C70816AE8E120077D072 /* RSMenuCell.m */,
+				CFF2C70D16AE8E120077D072 /* RSMenuFoldButton.h */,
+				CFF2C70E16AE8E120077D072 /* RSMenuFoldButton.m */,
+				CFF2C70F16AE8E120077D072 /* RSMenuRightView.h */,
+				CFF2C71016AE8E120077D072 /* RSMenuRightView.m */,
+				CFF2C71116AE8E120077D072 /* RSMenuRightViewInfo.h */,
+				CFF2C70A16AE8E120077D072 /* RSMenuView.h */,
+				CFF2C70716AE8E120077D072 /* RSMenuView.m */,
+				CFF2C71216AE8E120077D072 /* RSRowBackgroundView.h */,
+				CFF2C71316AE8E120077D072 /* RSRowBackgroundView.m */,
+			);
+			name = Vendor;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		CF5BE463162EA40300E0EE72 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				CF5BE465162EA40300E0EE72 /* allstreams_active@2x.png */,
+				CF5BE469162EA40300E0EE72 /* allstreams_enabled@2x.png */,
+				CF5BE46B162EA40300E0EE72 /* analytics_active@2x.png */,
+				CF5BE46F162EA40300E0EE72 /* analytics_enabled@2x.png */,
+				CF5BE49F162EA40300E0EE72 /* help_active@2x.png */,
+				CF5BE4A3162EA40300E0EE72 /* help_enabled@2x.png */,
+				CF5BE4D6162EA40300E0EE72 /* menu_compose@2x.png */,
+				CF5BE4D8162EA40300E0EE72 /* menu_options@2x.png */,
+				CF5BE4DB162EA40300E0EE72 /* menu_pattern@2x.png */,
+				CF5BE4DD162EA40300E0EE72 /* menutray_pattern@2x.png */,
+				CF5BE4E2162EA40300E0EE72 /* message_active@2x.png */,
+				CF5BE4E6162EA40300E0EE72 /* message_enabled@2x.png */,
+				CF5BE4F3162EA40300E0EE72 /* saved_view_active@2x.png */,
+				CF5BE4F7162EA40300E0EE72 /* saved_view_enabled@2x.png */,
+				CF5BE4F9162EA40300E0EE72 /* schedule_active@2x.png */,
+				CF5BE4FD162EA40300E0EE72 /* schedule_enabled@2x.png */,
+				CF5BE4FF162EA40300E0EE72 /* social_active@2x.png */,
+				CF5BE503162EA40300E0EE72 /* social_enabled@2x.png */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		CF46817A162EA175001E562C /* RSMenu Example */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CF468199162EA175001E562C /* Build configuration list for PBXNativeTarget "RSMenu Example" */;
+			buildPhases = (
+				CF468177162EA175001E562C /* Sources */,
+				CF468178162EA175001E562C /* Frameworks */,
+				CF468179162EA175001E562C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "RSMenu Example";
+			productName = "VHMenu Example";
+			productReference = CF46817B162EA175001E562C /* RSMenu Example.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		CF468172162EA175001E562C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = RS;
+				LastUpgradeCheck = 0450;
+				ORGANIZATIONNAME = rexsheng.com;
+			};
+			buildConfigurationList = CF468175162EA175001E562C /* Build configuration list for PBXProject "RSMenu Example" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = CF468170162EA175001E562C;
+			productRefGroup = CF46817C162EA175001E562C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				CF46817A162EA175001E562C /* RSMenu Example */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		CF468179162EA175001E562C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CF46818A162EA175001E562C /* InfoPlist.strings in Resources */,
+				CF468192162EA175001E562C /* Default.png in Resources */,
+				CF468194162EA175001E562C /* Default@2x.png in Resources */,
+				CF468196162EA175001E562C /* Default-568h@2x.png in Resources */,
+				CF5BE45E162EA27300E0EE72 /* Menu.plist in Resources */,
+				CF5BE511162EA40300E0EE72 /* allstreams_active@2x.png in Resources */,
+				CF5BE515162EA40300E0EE72 /* allstreams_enabled@2x.png in Resources */,
+				CF5BE517162EA40300E0EE72 /* analytics_active@2x.png in Resources */,
+				CF5BE51B162EA40300E0EE72 /* analytics_enabled@2x.png in Resources */,
+				CF5BE54B162EA40300E0EE72 /* help_active@2x.png in Resources */,
+				CF5BE54F162EA40300E0EE72 /* help_enabled@2x.png in Resources */,
+				CF5BE582162EA40300E0EE72 /* menu_compose@2x.png in Resources */,
+				CF5BE584162EA40300E0EE72 /* menu_options@2x.png in Resources */,
+				CF5BE587162EA40300E0EE72 /* menu_pattern@2x.png in Resources */,
+				CF5BE589162EA40300E0EE72 /* menutray_pattern@2x.png in Resources */,
+				CF5BE58E162EA40300E0EE72 /* message_active@2x.png in Resources */,
+				CF5BE592162EA40300E0EE72 /* message_enabled@2x.png in Resources */,
+				CF5BE59F162EA40300E0EE72 /* saved_view_active@2x.png in Resources */,
+				CF5BE5A3162EA40300E0EE72 /* saved_view_enabled@2x.png in Resources */,
+				CF5BE5A5162EA40300E0EE72 /* schedule_active@2x.png in Resources */,
+				CF5BE5A9162EA40300E0EE72 /* schedule_enabled@2x.png in Resources */,
+				CF5BE5AB162EA40300E0EE72 /* social_active@2x.png in Resources */,
+				CF5BE5AF162EA40300E0EE72 /* social_enabled@2x.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		CF468177162EA175001E562C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CF46818C162EA175001E562C /* main.m in Sources */,
+				CF468190162EA175001E562C /* RSAppDelegate.m in Sources */,
+				CF5BE460162EA27300E0EE72 /* RSMenuCount.m in Sources */,
+				CF5BE462162EA27300E0EE72 /* RSMenuViewController.m in Sources */,
+				CFF2C71416AE8E120077D072 /* RSMenuView.m in Sources */,
+				CFF2C71516AE8E120077D072 /* RSMenuCell.m in Sources */,
+				CFF2C71816AE8E120077D072 /* RSMenuButton.m in Sources */,
+				CFF2C71B16AE8E120077D072 /* RSMenuFoldButton.m in Sources */,
+				CFF2C71D16AE8E120077D072 /* RSMenuRightView.m in Sources */,
+				CFF2C72016AE8E120077D072 /* RSRowBackgroundView.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		CF468188162EA175001E562C /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CF468189162EA175001E562C /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		CF468197162EA175001E562C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CF468198162EA175001E562C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		CF46819A162EA175001E562C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "VHMenu Example/RSMenu Example-Prefix.pch";
+				INFOPLIST_FILE = "VHMenu Example/RSMenu Example-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				PRODUCT_NAME = "RSMenu Example";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		CF46819B162EA175001E562C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "VHMenu Example/RSMenu Example-Prefix.pch";
+				INFOPLIST_FILE = "VHMenu Example/RSMenu Example-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				PRODUCT_NAME = "RSMenu Example";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		CF468175162EA175001E562C /* Build configuration list for PBXProject "RSMenu Example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CF468197162EA175001E562C /* Debug */,
+				CF468198162EA175001E562C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CF468199162EA175001E562C /* Build configuration list for PBXNativeTarget "RSMenu Example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CF46819A162EA175001E562C /* Debug */,
+				CF46819B162EA175001E562C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = CF468172162EA175001E562C /* Project object */;
+}

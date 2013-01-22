@@ -1,24 +1,24 @@
 //
-//  VHMenuViewController.m
+//  RSMenuViewController.m
 //  viralheat
 //
 //  Created by Rex Sheng on 10/10/12.
 //  Copyright (c) 2012 Log(n) LLC. All rights reserved.
 //
 
-#import "VHMenuViewController.h"
-#import "VHRowBackgroundView.h"
-#import "VHMenuView.h"
+#import "RSMenuViewController.h"
+#import "RSRowBackgroundView.h"
+#import "RSMenuView.h"
 
-@interface VHMenuViewController () <VHMenuViewDelegate>
+@interface RSMenuViewController () <RSMenuViewDelegate>
 
 @end
 
-@implementation VHMenuViewController
+@implementation RSMenuViewController
 {
 	UILabel *nameLabel;
 	UIImageView *avatarView;
-	VHMenuView *menuView;
+	RSMenuView *menuView;
 	NSUInteger count;
 	NSTimer *testTimer;
 }
@@ -34,7 +34,7 @@
 	CGFloat height = 44.f;
 	CGFloat margin = 7.f;
 	CGFloat avatarWidth = height - margin * 2;
-	VHRowBackgroundView *headerView = [[VHRowBackgroundView alloc] initWithFrame:CGRectMake(0, 0, size.width, height)];
+	RSRowBackgroundView *headerView = [[RSRowBackgroundView alloc] initWithFrame:CGRectMake(0, 0, size.width, height)];
 	headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 	[self.view addSubview:headerView];
 	avatarView = [[UIImageView alloc] initWithFrame:CGRectMake(margin, margin, avatarWidth, avatarWidth)];
@@ -47,7 +47,7 @@
 	nameLabel.shadowColor = [UIColor blackColor];
 	nameLabel.shadowOffset = CGSizeMake(0, 1);
 	[headerView addSubview:nameLabel];
-	menuView = [[VHMenuView alloc] initWithFrame:CGRectMake(0, height, size.width, size.height - height)];
+	menuView = [[RSMenuView alloc] initWithFrame:CGRectMake(0, height, size.width, size.height - height)];
 	menuView.delegate = self;
 	menuView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	menuView.highlightedTextColor = [UIColor colorWithRed:.93f green:.5f blue:.21f alpha:1];
@@ -56,7 +56,7 @@
 
 	nameLabel.text = @"Author: Rex Sheng";
 	NSString *configFile = [[NSBundle mainBundle] pathForResource:@"Menu" ofType:@"plist"];
-	[menuView loadFromConfiguration:[NSArray arrayWithContentsOfFile:configFile]];
+	[menuView setItems:[NSArray arrayWithContentsOfFile:configFile]];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -79,7 +79,6 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"saved[0].count" object:@(count)];
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"saved[1].count" object:@(count / 2)];
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"messages.scheduled.count" object:@(count / 4)];
-
 }
 
 - (void)viewDidUnload
@@ -95,7 +94,7 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (UIFont *)menuView:(VHMenuView *)menuView fontForTextAtIndent:(NSUInteger)indent
+- (UIFont *)menuView:(RSMenuView *)menuView fontForTextAtIndent:(NSUInteger)indent
 {
 	if (indent) {
 		return [UIFont systemFontOfSize:15.1f];

@@ -1,14 +1,14 @@
 //
-//  VHMenuCount.m
+//  RSMenuCount.m
 //  viralheat
 //
 //  Created by Rex Sheng on 10/16/12.
 //  Copyright (c) 2012 Log(n) LLC. All rights reserved.
 //
 
-#import "VHMenuCount.h"
+#import "RSMenuCount.h"
 
-@implementation VHMenuCount
+@implementation RSMenuCount
 {
 	UIFont *font;
 	NSString *identifier;

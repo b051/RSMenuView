@@ -1,5 +1,5 @@
 //
-//  VHMenuCount.h
+//  RSMenuCount.h
 //  viralheat
 //
 //  Created by Rex Sheng on 10/16/12.
@@ -7,8 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "VHMenuRightViewInfo.h"
+#import "RSMenuRightViewInfo.h"
 
-@interface VHMenuCount : UIView <VHMenuRightViewInfo>
+@interface RSMenuCount : UIView <RSMenuRightViewInfo>
 
 @end
