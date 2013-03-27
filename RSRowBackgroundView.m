@@ -9,7 +9,7 @@
 
 @implementation RSRowBackgroundView
 
-@synthesize highlighted;
+@synthesize highlighted=_highlighted;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -20,6 +20,12 @@
 	return self;
 }
 
+- (void)setHighlighted:(BOOL)highlighted
+{
+	_highlighted = highlighted;
+	[self setNeedsDisplay];
+}
+
 - (void)drawRect:(CGRect)rect
 {
 	CGContextRef context = UIGraphicsGetCurrentContext();
@@ -27,10 +33,10 @@
 	CGFloat lineHeight = .55f;
 	CGContextSetGrayFillColor(context, 0, 1);
 	CGContextFillRect(context, CGRectMake(0, rect.size.height - lineHeight, rect.size.width, lineHeight));
-	CGContextSetGrayFillColor(context, 1, highlighted ? .28f : .11f);
+	CGContextSetGrayFillColor(context, 1, _highlighted ? .28f : .11f);
 	CGContextFillRect(context, CGRectMake(0, 0, rect.size.width, lineHeight));
 	
-	if (highlighted) {
+	if (_highlighted) {
 		CGContextSetGrayFillColor(context, 1, .11f);
 		CGContextFillRect(context, CGRectInset(rect, 0, lineHeight));
 	}
