@@ -359,7 +359,7 @@ NSString * const kRSMenuItems = @"items";
 				}
 				idx++;
 			}
-			[_tableView selectRowAtIndexPath:selectIndexPath animated:NO scrollPosition:UITableViewRowAnimationNone];
+			[_tableView selectRowAtIndexPath:selectIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
 		}
 	}
 }
