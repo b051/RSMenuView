@@ -62,8 +62,8 @@ NSString * const kRSMenuItems = @"items";
 		_tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 		_foldableRows = [NSMutableDictionary dictionary];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(menuFoldingChanged:) name:RSMenuOpenNotification object:nil];
-    }
-    return self;
+	}
+	return self;
 }
 
 - (void)dealloc
