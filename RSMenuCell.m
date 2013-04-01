@@ -30,6 +30,12 @@
 	self.textLabel.shadowColor = self.selected ? _selectedTextShadowColor : (self.highlighted ? _highlightedTextShadowColor : _textShadowColor);
 }
 
+- (void)setRowSeperatorImage:(UIImage *)rowSeperatorImage
+{
+	[(RSRowBackgroundView *)self.backgroundView setRowSeperatorImage:rowSeperatorImage];
+	[(RSRowBackgroundView *)self.selectedBackgroundView setRowSeperatorImage:rowSeperatorImage];
+}
+
 - (void)setSelectedTextShadowColor:(UIColor *)selectedTextShadowColor
 {
 	_selectedTextShadowColor = selectedTextShadowColor;
