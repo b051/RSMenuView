@@ -10,7 +10,7 @@
 @interface RSRowBackgroundView : UIView
 
 @property (nonatomic) BOOL highlighted;
-@property (nonatomic, strong) UIImage *rowSeperatorImage;
+@property (nonatomic, strong) UIImage *rowSeperatorImage UI_APPEARANCE_SELECTOR;
 @property (nonatomic) CGFloat normalAlpha UI_APPEARANCE_SELECTOR;
 @property (nonatomic) CGFloat highlightedAlpha UI_APPEARANCE_SELECTOR;
 
