@@ -41,8 +41,12 @@
 
 - (void)setTextFont:(UIFont *)font forIndent:(NSUInteger)indent UI_APPEARANCE_SELECTOR;
 - (UIFont *)textFontForIndent:(NSUInteger)indent UI_APPEARANCE_SELECTOR;
+
 - (void)setTextColor:(UIColor *)color forIndent:(NSUInteger)indent UI_APPEARANCE_SELECTOR;
 - (UIColor *)textColorForIndent:(NSUInteger)indent UI_APPEARANCE_SELECTOR;
+
+- (void)setRowBackgroundColor:(UIColor *)color forIndent:(NSUInteger)indent UI_APPEARANCE_SELECTOR;
+- (UIColor *)rowBackgroundColorForIndent:(NSUInteger)indent UI_APPEARANCE_SELECTOR;
 
 - (void)setItemSelectedWithIdentifier:(NSString *)identifier;
 

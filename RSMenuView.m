@@ -32,6 +32,7 @@ NSString * const kRSMenuItems = @"items";
 	BOOL _inBatchUpdates;
 	NSMutableDictionary *textFonts;
 	NSMutableDictionary *textColors;
+	NSMutableDictionary *rowBackgroundColors;
 }
 
 @dynamic menuHeaderView, menuFooterView;
@@ -59,10 +60,28 @@ NSString * const kRSMenuItems = @"items";
 
 - (UIColor *)textColorForIndent:(NSUInteger)indent
 {
-	if (textColors && textColors.count > indent) {
-		return textColors[@(indent)];
+	if (textColors) {
+		UIColor *color = textColors[@(indent)];
+		if (color) return color;
 	}
 	return _textColor;
+}
+
+- (void)setRowBackgroundColor:(UIColor *)color forIndent:(NSUInteger)indent
+{
+	if (!rowBackgroundColors) {
+		rowBackgroundColors = [@{} mutableCopy];
+	}
+	rowBackgroundColors[@(indent)] = color;
+}
+
+- (UIColor *)rowBackgroundColorForIndent:(NSUInteger)indent
+{
+	if (rowBackgroundColors) {
+		UIColor *color = rowBackgroundColors[@(indent)];
+		if (color) return color;
+	}
+	return [UIColor clearColor];
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -318,7 +337,7 @@ NSString * const kRSMenuItems = @"items";
 	//indent
 	cell.textLabel.font = [self textFontForIndent:indent];
 	cell.textLabel.textColor = [self textColorForIndent:indent];
-
+	cell.backgroundView.backgroundColor = [self rowBackgroundColorForIndent:indent];
 	[(RSRowBackgroundView *)cell.backgroundView setHighlighted:indent == 0];
 	cell.textLabel.text = row[@"title"];
 	NSString *leftview = row[@"leftview"];
@@ -336,8 +355,9 @@ NSString * const kRSMenuItems = @"items";
 	
 	NSMutableArray *rightViews = [NSMutableArray array];
 	if (rightViewsConfiguration) {
+		BOOL customize = [self.delegate respondsToSelector:@selector(menuView:attributesForItemWithIdentifier:)];
 		for (NSDictionary *config in rightViewsConfiguration) {
-			if ([self.delegate respondsToSelector:@selector(menuView:attributesForItemWithIdentifier:)]) {
+			if (customize) {
 				id rid = config[kRSMenuIdentifier];
 				NSDictionary *attributes = [self.delegate menuView:self attributesForItemWithIdentifier:rid];
 				if (attributes) {
