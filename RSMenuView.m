@@ -31,7 +31,10 @@ NSString * const kRSMenuItems = @"items";
 	BOOL everLayedout;
 	BOOL _inBatchUpdates;
 	NSMutableDictionary *textFonts;
+	NSMutableDictionary *textColors;
 }
+
+@dynamic menuHeaderView, menuFooterView;
 
 - (void)setTextFont:(UIFont *)font forIndent:(NSUInteger)indent
 {
@@ -44,6 +47,22 @@ NSString * const kRSMenuItems = @"items";
 - (UIFont *)textFontForIndent:(NSUInteger)indent
 {
 	return textFonts[@(indent)];
+}
+
+- (void)setTextColor:(UIColor *)color forIndent:(NSUInteger)indent
+{
+	if (!textColors) {
+		textColors = [@{} mutableCopy];
+	}
+	textColors[@(indent)] = color;
+}
+
+- (UIColor *)textColorForIndent:(NSUInteger)indent
+{
+	if (textColors && textColors.count > indent) {
+		return textColors[@(indent)];
+	}
+	return _textColor;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -64,6 +83,26 @@ NSString * const kRSMenuItems = @"items";
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(menuFoldingChanged:) name:RSMenuOpenNotification object:nil];
 	}
 	return self;
+}
+
+- (void)setMenuFooterView:(UIView *)menuFooterView
+{
+	_tableView.tableFooterView = menuFooterView;
+}
+
+- (UIView *)menuFooterView
+{
+	return _tableView.tableFooterView;
+}
+
+- (UIView *)menuHeaderView
+{
+	return _tableView.tableHeaderView;
+}
+
+- (void)setMenuHeaderView:(UIView *)menuHeaderView
+{
+	_tableView.tableHeaderView = menuHeaderView;
 }
 
 - (void)dealloc
@@ -248,8 +287,20 @@ NSString * const kRSMenuItems = @"items";
 	return _currentRows.count;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	if ([self.delegate respondsToSelector:@selector(menuView:heightForItemWithIdentifier:)]) {
+		NSDictionary *row = _currentRows[indexPath.row];
+		return [self.delegate menuView:self heightForItemWithIdentifier:row[kRSMenuIdentifier]];
+	}
+	return self.rowHeight;
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+	NSDictionary *row = _currentRows[indexPath.row];
+	NSUInteger indent = [row[@"indent"] integerValue];
+
 	static NSString *cellIdentifier = @"RSMenuCell";
 	RSMenuCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 	if (!cell) {
@@ -261,14 +312,13 @@ NSString * const kRSMenuItems = @"items";
 		//textlabel
 		CGFloat x = r + _rowEdgeInsets.left * 2;
 		cell.rightView.frame = cell.textLabel.frame = CGRectMake(x, _rowEdgeInsets.top, frame.size.width - _rowEdgeInsets.right - x, r);
-		cell.textLabel.textColor = _textColor;
 		cell.textLabel.highlightedTextColor = _highlightedTextColor;
 		cell.textLabel.shadowOffset = _textShadowOffset;
 	}
-	NSDictionary *row = _currentRows[indexPath.row];
 	//indent
-	NSUInteger indent = [row[@"indent"] integerValue];
 	cell.textLabel.font = [self textFontForIndent:indent];
+	cell.textLabel.textColor = [self textColorForIndent:indent];
+
 	[(RSRowBackgroundView *)cell.backgroundView setHighlighted:indent == 0];
 	cell.textLabel.text = row[@"title"];
 	NSString *leftview = row[@"leftview"];

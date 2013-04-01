@@ -39,7 +39,8 @@
 		self.contentMode = UIViewContentModeScaleToFill;
 		ruler = [[UIImageView alloc] initWithImage:rowSeperatorImage];
 		CGRect frame = ruler.frame;
-		frame.origin.y = frame.size.height - 1;
+		frame.size.width = self.bounds.size.width;
+		frame.origin.y = self.bounds.size.height - 1;
 		ruler.frame = frame;
 		[self addSubview:ruler];
 	} else {

@@ -14,11 +14,14 @@
 @optional
 - (void)menuView:(RSMenuView *)menuView didSelectItemWithIdentifier:(NSString *)identifier;
 - (NSDictionary *)menuView:(RSMenuView *)menuView attributesForItemWithIdentifier:(NSString *)identifier;
+- (CGFloat)menuView:(RSMenuView *)menuView heightForItemWithIdentifier:(NSString *)identifier;
 
 @end
 
 @interface RSMenuView : UIView
 
+@property (nonatomic, strong) UIView *menuHeaderView;
+@property (nonatomic, strong) UIView *menuFooterView;
 @property (nonatomic) UITableViewRowAnimation rowAnimation;
 @property (nonatomic, strong) UIColor *textColor UI_APPEARANCE_SELECTOR;
 @property (nonatomic, strong) UIColor *highlightedTextColor UI_APPEARANCE_SELECTOR;
@@ -38,6 +41,8 @@
 
 - (void)setTextFont:(UIFont *)font forIndent:(NSUInteger)indent UI_APPEARANCE_SELECTOR;
 - (UIFont *)textFontForIndent:(NSUInteger)indent UI_APPEARANCE_SELECTOR;
+- (void)setTextColor:(UIColor *)color forIndent:(NSUInteger)indent UI_APPEARANCE_SELECTOR;
+- (UIColor *)textColorForIndent:(NSUInteger)indent UI_APPEARANCE_SELECTOR;
 
 - (void)setItemSelectedWithIdentifier:(NSString *)identifier;
 
