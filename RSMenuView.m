@@ -273,7 +273,8 @@ NSString * const kRSMenuItems = @"items";
 	cell.textLabel.text = row[@"title"];
 	NSString *leftview = row[@"leftview"];
 	if (leftview) {
-		cell.imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@_active", leftview]];
+		UIImage *image = [UIImage imageNamed:[NSString stringWithFormat:@"%@_active", leftview]];
+		cell.imageView.image = image ?: [UIImage imageNamed:leftview];
 		cell.imageView.highlightedImage = [UIImage imageNamed:[NSString stringWithFormat:@"%@_enabled", leftview]];
 	} else {
 		cell.imageView.image = nil;
