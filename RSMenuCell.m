@@ -16,7 +16,6 @@
 {
 	if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
 		self.backgroundView = [[RSRowBackgroundView alloc] initWithFrame:self.contentView.bounds];
-		self.selectedBackgroundView = [[RSRowBackgroundView alloc] initWithFrame:self.contentView.bounds];
 		self.imageView.contentMode = UIViewContentModeCenter;
 		_rightView = [[RSMenuRightView alloc] initWithFrame:self.contentView.bounds];
 		self.rightView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleLeftMargin;
@@ -33,7 +32,6 @@
 - (void)setRowSeperatorImage:(UIImage *)rowSeperatorImage
 {
 	[(RSRowBackgroundView *)self.backgroundView setRowSeperatorImage:rowSeperatorImage];
-	[(RSRowBackgroundView *)self.selectedBackgroundView setRowSeperatorImage:rowSeperatorImage];
 }
 
 - (void)setSelectedTextShadowColor:(UIColor *)selectedTextShadowColor
@@ -54,6 +52,9 @@
 	[self drawShadow];
 	self.textLabel.highlighted = selected;
 	self.imageView.highlighted = selected;
+	if (_selectedBackgroundColor) {
+		[self.backgroundView setBackgroundColor:selected ? _selectedBackgroundColor : [UIColor clearColor]];
+	}
 }
 
 - (void)setHighlighted:(BOOL)_highlighted animated:(BOOL)animated
@@ -62,6 +63,9 @@
 	[self drawShadow];
 	self.textLabel.highlighted = highlighted;
 	self.imageView.highlighted = highlighted;
+	if (_selectedBackgroundColor) {
+		[self.backgroundView setBackgroundColor:highlighted ? _selectedBackgroundColor : [UIColor clearColor]];
+	}
 }
 
 @end
