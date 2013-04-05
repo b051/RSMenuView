@@ -30,15 +30,17 @@
 {
 	[super layoutSubviews];
 	CGRect frame = self.textLabel.frame;
+	CGRect rf = self.rightView.frame;
+	frame.origin.x = rf.origin.x;
 	if (!self.leftView.hidden) {
 		CGRect lf = self.leftView.frame;
 		lf.origin.y = (self.bounds.size.height - lf.size.height) / 2;
+		lf.origin.x = (frame.origin.x - lf.size.width) / 2;
 		self.leftView.frame = lf;
 		[self.contentView addSubview:self.leftView];
 		frame.origin.x = CGRectGetMaxX(lf) + lf.origin.x;
 	} else {
-		CGRect frame = self.textLabel.frame;
-		frame.origin.x = 30;
+		self.imageView.center = CGPointMake(frame.origin.x / 2, frame.size.height / 2);
 		[self.leftView removeFromSuperview];
 	}
 	self.textLabel.frame = frame;

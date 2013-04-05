@@ -453,10 +453,9 @@ NSString * const kRSMenuItems = @"items";
 		CGRect frame = cell.contentView.bounds;
 		//imageview
 		CGFloat r = _tableView.rowHeight - _rowEdgeInsets.top - _rowEdgeInsets.bottom;
-		cell.leftView.frame = cell.imageView.frame = CGRectMake(_rowEdgeInsets.left, _rowEdgeInsets.top, r, r);
+		cell.leftView.frame = cell.imageView.frame = CGRectMake(_rowEdgeInsets.top, _rowEdgeInsets.top, r, r);
 		//textlabel
-		CGFloat x = r + _rowEdgeInsets.left * 2;
-		cell.rightView.frame = cell.textLabel.frame = CGRectMake(x, _rowEdgeInsets.top, frame.size.width - _rowEdgeInsets.right - x, r);
+		cell.rightView.frame = cell.textLabel.frame = UIEdgeInsetsInsetRect(frame, _rowEdgeInsets);
 		cell.textLabel.highlightedTextColor = _highlightedTextColor;
 		cell.textLabel.shadowOffset = _textShadowOffset;
 	}
