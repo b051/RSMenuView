@@ -6,11 +6,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "RSMenuRightView.h"
+#import "RSMenuCellItem.h"
 
 @interface RSMenuCell : UITableViewCell
 
-@property (nonatomic, strong) RSMenuRightView *rightView;
+@property (nonatomic, strong) RSMenuCellItem *rightView;
+@property (nonatomic, strong) RSMenuCellItem *leftView;
 @property (nonatomic, strong) UIColor *selectedTextShadowColor UI_APPEARANCE_SELECTOR;
 @property (nonatomic, strong) UIColor *highlightedTextShadowColor UI_APPEARANCE_SELECTOR;
 @property (nonatomic, strong) UIColor *textShadowColor UI_APPEARANCE_SELECTOR;

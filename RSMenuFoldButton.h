@@ -5,11 +5,11 @@
 //  Copyright (c) 2012 Log(n) LLC. All rights reserved.
 //
 
-#import "RSMenuRightViewInfo.h"
+#import "RSMenuCellItem.h"
 
 extern NSString * const kRSMenuOpening;
 extern NSString * const RSMenuOpenNotification;
 
-@interface RSMenuFoldButton : UIView <RSMenuRightViewInfo>
+@interface RSMenuFoldButton : UIView <RSMenuCellItem>
 
 @end

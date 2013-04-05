@@ -17,9 +17,10 @@ NSString * const kRSMenuItems = @"items";
 
 #pragma mark - RSMenuView
 @interface RSMenuView () <UITableViewDataSource, UITableViewDelegate>
-@property (nonatomic, strong) NSMutableArray *configuration;
-@property (nonatomic, strong) NSMutableArray *currentRows;
+@property (nonatomic, strong) NSMutableDictionary *configuration;
+@property (nonatomic, strong) NSMutableDictionary *currentRows;
 @property (nonatomic, strong) NSMutableDictionary *foldableRows;
+@property (nonatomic, strong) NSMutableDictionary *sectionHeaders;
 @end
 
 @implementation RSMenuView
@@ -139,6 +140,30 @@ NSString * const kRSMenuItems = @"items";
 	return _tableView.rowHeight;
 }
 
+- (NSMutableArray *)rowsForSection:(NSUInteger)section
+{
+	if (!_configuration) _configuration = [@{} mutableCopy];
+	
+	NSMutableArray *sectionConfig = _configuration[@(section)];
+	if (!sectionConfig) {
+		sectionConfig = [NSMutableArray array];
+		_configuration[@(section)] = sectionConfig;
+	}
+	return sectionConfig;
+}
+
+- (NSMutableArray *)currentRowsForSection:(NSUInteger)section
+{
+	if (!_currentRows) _currentRows = [@{} mutableCopy];
+	
+	NSMutableArray *sectionConfig = _currentRows[@(section)];
+	if (!sectionConfig) {
+		sectionConfig = [NSMutableArray array];
+		_currentRows[@(section)] = sectionConfig;
+	}
+	return sectionConfig;
+}
+
 - (void)menuFoldingChanged:(NSNotification *)note
 {
 	id opening = (note.userInfo)[kRSMenuOpening];
@@ -146,40 +171,49 @@ NSString * const kRSMenuItems = @"items";
 	_foldableRows[identifier] = opening;
 	
 	__block NSDictionary *config = nil;
-	[self.configuration enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-		if ([obj[kRSMenuIdentifier] isEqualToString:identifier]) {
-			*stop = YES;
-			config = obj;
-		}
+	__block NSUInteger section = 0;
+	[self.configuration enumerateKeysAndObjectsUsingBlock:^(NSNumber *key, NSArray *obj, BOOL *stop) {
+		[obj enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+			if ([obj[kRSMenuIdentifier] isEqualToString:identifier]) {
+				*stop = YES;
+				config = obj;
+				section = key.integerValue;
+			}
+		}];
+		if (config) *stop = YES;
 	}];
-	NSUInteger startRow = [_currentRows indexOfObject:config] + 1;
+	
+	NSMutableArray *currentRows = [self currentRowsForSection:section];
+	NSUInteger startRow = [currentRows indexOfObject:config] + 1;
 	NSArray *subitems = config[kRSMenuItems];
 	[_tableView beginUpdates];
 	if ([opening boolValue]) {
 		NSMutableArray *indexPaths = [NSMutableArray array];
 		for (int i = 0; i < subitems.count; i++) {
 			NSUInteger row = startRow + i;
-			[_currentRows insertObject:subitems[i] atIndex:row];
-			[indexPaths addObject:[NSIndexPath indexPathForRow:row inSection:0]];
+			[currentRows insertObject:subitems[i] atIndex:row];
+			[indexPaths addObject:[NSIndexPath indexPathForRow:row inSection:section]];
 		}
 		[_tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:_rowAnimation];
 	} else {
 		NSMutableArray *indexPaths = [NSMutableArray array];
-		[_currentRows removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(startRow, subitems.count)]];
+		[currentRows removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(startRow, subitems.count)]];
 		for (int i = 0; i < subitems.count; i++) {
 			NSUInteger row = startRow + i;
-			[indexPaths addObject:[NSIndexPath indexPathForRow:row inSection:0]];
+			[indexPaths addObject:[NSIndexPath indexPathForRow:row inSection:section]];
 		}
 		[_tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:_rowAnimation];
 	}
 	[_tableView endUpdates];
 }
 
-- (NSArray *)_insertItem:(NSDictionary *)obj atIndex:(NSUInteger)idx
+- (NSArray *)_insertItem:(NSDictionary *)obj atIndex:(NSUInteger)idx section:(NSUInteger)section
 {
 	NSMutableArray *indexPaths = [@[] mutableCopy];
-	[_currentRows insertObject:obj atIndex:idx];
-	[indexPaths addObject:[NSIndexPath indexPathForRow:idx inSection:0]];
+	NSMutableArray *currentRows = [self currentRowsForSection:section];
+	
+	[currentRows insertObject:obj atIndex:idx];
+	[indexPaths addObject:[NSIndexPath indexPathForRow:idx inSection:section]];
 	NSArray *subitems = obj[kRSMenuItems];
 	NSString *identifier = obj[kRSMenuIdentifier];
 	if (subitems && identifier) {
@@ -188,86 +222,127 @@ NSString * const kRSMenuItems = @"items";
 		if (opening) {
 			for (int i = 0; i < subitems.count; i++) {
 				NSUInteger row = idx + i;
-				[_currentRows insertObject:subitems[i] atIndex:row];
-				[indexPaths addObject:[NSIndexPath indexPathForRow:row inSection:0]];
+				[currentRows insertObject:subitems[i] atIndex:row];
+				[indexPaths addObject:[NSIndexPath indexPathForRow:row inSection:section]];
 			}
 		}
 	}
 	return indexPaths;
 }
 
-- (NSArray *)_deleteItemAtIndex:(NSUInteger)idx
+- (NSArray *)_deleteItemAtIndex:(NSUInteger)idx section:(NSUInteger)section
 {
 	NSMutableArray *indexPaths = [@[] mutableCopy];
-	if (_currentRows.count > idx) {
-		NSDictionary *obj = _currentRows[idx];
+	NSMutableArray *currentRows = [self currentRowsForSection:section];
+	
+	if (currentRows.count > idx) {
+		NSDictionary *obj = currentRows[idx];
 		NSArray *subitems = obj[kRSMenuItems];
 		NSString *identifier = obj[kRSMenuIdentifier];
 		if (subitems && identifier) {
 			if ([_foldableRows[identifier] boolValue]) {
-				[_currentRows removeObjectsInRange:NSMakeRange(idx + 1, subitems.count)];
+				[currentRows removeObjectsInRange:NSMakeRange(idx + 1, subitems.count)];
 				for (int i = 0; i < subitems.count; i++) {
-					[indexPaths addObject:[NSIndexPath indexPathForRow:idx + 1 + i inSection:0]];
+					[indexPaths addObject:[NSIndexPath indexPathForRow:idx + 1 + i inSection:section]];
 				}
 			}
 		}
-		[_currentRows removeObjectAtIndex:idx];
-		[indexPaths addObject:[NSIndexPath indexPathForRow:idx inSection:0]];
+		[currentRows removeObjectAtIndex:idx];
+		[indexPaths addObject:[NSIndexPath indexPathForRow:idx inSection:section]];
 	}
 	return indexPaths;
 }
 
-- (void)setItems:(NSArray *)configuration
+- (void)setItems:(NSArray *)configuration forSection:(NSUInteger)section sectionHeader:(NSDictionary *)sectionHeader
 {
 	[_foldableRows removeAllObjects];
-	_configuration = [configuration mutableCopy];
-	_currentRows = [@[] mutableCopy];
-	
+	NSMutableArray *currentRows = [self currentRowsForSection:section];
+	[currentRows removeAllObjects];
+	[[self rowsForSection:section] addObjectsFromArray:configuration];
+	if (sectionHeader) {
+		if (!_sectionHeaders) _sectionHeaders = [@{} mutableCopy];
+		_sectionHeaders[@(section)] = sectionHeader;
+	}
 	[configuration enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-		[self _insertItem:obj atIndex:_currentRows.count];
+		[self _insertItem:obj atIndex:currentRows.count section:section];
 	}];
 	
 	[_tableView reloadData];
 }
 
-- (void)insertItem:(NSDictionary *)item atRow:(NSUInteger)row
+- (void)setItems:(NSArray *)configuration
+{
+	[self setItems:configuration forSection:0 sectionHeader:nil];
+}
+
+- (void)updateSectionItem:(NSDictionary *)item atSection:(NSUInteger)section
+{
+	if (!_inBatchUpdates) [_tableView beginUpdates];
+	if (item) {
+		if (!_sectionHeaders) _sectionHeaders = [@{} mutableCopy];
+		_sectionHeaders[@(section)] = item;
+		[_tableView reloadSections:[NSIndexSet indexSetWithIndex:section] withRowAnimation:UITableViewRowAnimationNone];
+	}
+	if (!_inBatchUpdates) [_tableView endUpdates];
+}
+
+- (void)insertItem:(NSDictionary *)item atRow:(NSUInteger)row section:(NSUInteger)section
 {
 	if (!_inBatchUpdates) [_tableView beginUpdates];
 	
+	NSMutableArray *configuration = [self rowsForSection:section];
+	NSMutableArray *currentRows = [self currentRowsForSection:section];
+	
 	NSUInteger relativeRow = 0;
-	if (_configuration.count > row) {
-		relativeRow = [_currentRows indexOfObject:_configuration[row]];
+	if (configuration.count > row) {
+		relativeRow = [currentRows indexOfObject:configuration[row]];
 	}
-	[_configuration insertObject:item atIndex:row];
-	NSArray *paths = [self _insertItem:item atIndex:relativeRow];
+	[configuration insertObject:item atIndex:row];
+	NSArray *paths = [self _insertItem:item atIndex:relativeRow section:section];
 	[_tableView insertRowsAtIndexPaths:paths withRowAnimation:_rowAnimation];
 	
 	if (!_inBatchUpdates) [_tableView endUpdates];
 }
 
-- (void)deleteItemAtRow:(NSUInteger)row
+- (void)insertItem:(NSDictionary *)item atRow:(NSUInteger)row
+{
+	[self insertItem:item atRow:row section:0];
+}
+
+- (void)deleteItemAtRow:(NSUInteger)row section:(NSUInteger)section
 {
 	if (!_inBatchUpdates) [_tableView beginUpdates];
 	
-	if (_configuration.count > row) {
-		NSUInteger relativeRow = [_currentRows indexOfObject:_configuration[row]];
-		[_configuration removeObjectAtIndex:row];
-		NSArray *paths = [self _deleteItemAtIndex:relativeRow];
+	NSMutableArray *configuration = [self rowsForSection:section];
+	NSMutableArray *currentRows = [self currentRowsForSection:section];
+	
+	if (configuration.count > row) {
+		NSUInteger relativeRow = [currentRows indexOfObject:configuration[row]];
+		[configuration removeObjectAtIndex:row];
+		NSArray *paths = [self _deleteItemAtIndex:relativeRow section:section];
 		[_tableView deleteRowsAtIndexPaths:paths withRowAnimation:_rowAnimation];
 	}
 	
 	if (!_inBatchUpdates) [_tableView endUpdates];
 }
 
-- (void)replaceItemAtRow:(NSUInteger)row withItem:(NSDictionary *)item
+- (void)deleteItemAtRow:(NSUInteger)row
+{
+	[self deleteItemAtRow:row section:0];
+}
+
+- (void)replaceItemAtRow:(NSUInteger)row section:(NSUInteger)section withItem:(NSDictionary *)item
 {
 	if (!_inBatchUpdates) [_tableView beginUpdates];
 	
-	if (_configuration.count > row) {
-		NSUInteger relativeRow = [_currentRows indexOfObject:_configuration[row]];
-		_configuration[row] = item;
-		NSArray *_deletePaths = [self _deleteItemAtIndex:relativeRow];
-		NSArray *_insertPaths = [self _insertItem:item atIndex:relativeRow];
+	NSMutableArray *configuration = [self rowsForSection:section];
+	NSMutableArray *currentRows = [self currentRowsForSection:section];
+	
+	if (configuration.count > row) {
+		NSUInteger relativeRow = [currentRows indexOfObject:configuration[row]];
+		configuration[row] = item;
+		NSArray *_deletePaths = [self _deleteItemAtIndex:relativeRow section:section];
+		NSArray *_insertPaths = [self _insertItem:item atIndex:relativeRow section:section];
 		NSMutableArray *deletePaths = [_deletePaths mutableCopy];
 		NSMutableArray *insertPaths = [_insertPaths mutableCopy];
 		NSMutableArray *updatePaths = [@[] mutableCopy];
@@ -286,6 +361,11 @@ NSString * const kRSMenuItems = @"items";
 	if (!_inBatchUpdates) [_tableView endUpdates];
 }
 
+- (void)replaceItemAtRow:(NSUInteger)row withItem:(NSDictionary *)item
+{
+	[self replaceItemAtRow:row section:0 withItem:item];
+}
+
 - (void)performBatchUpdates:(dispatch_block_t)updates
 {
 	[_tableView beginUpdates];
@@ -298,36 +378,82 @@ NSString * const kRSMenuItems = @"items";
 #pragma mark - UITableView Delegate & DataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-	return _currentRows ? 1 : 0;
+	return _currentRows.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-	return _currentRows.count;
+	return [self currentRowsForSection:section].count;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+	NSDictionary *config = _sectionHeaders[@(section)];
+	if (config) {
+		if ([self.delegate respondsToSelector:@selector(menuView:heightForItemWithIdentifier:)]) {
+			return [self.delegate menuView:self heightForItemWithIdentifier:config[kRSMenuIdentifier]];
+		}
+		return self.rowHeight;
+	}
+	return 0;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+	NSDictionary *config = _sectionHeaders[@(section)];
+	RSMenuCell *view = nil;
+	if (config) {
+		view = [self cellForRow:config];
+	}
+	return view;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	if ([self.delegate respondsToSelector:@selector(menuView:heightForItemWithIdentifier:)]) {
-		NSDictionary *row = _currentRows[indexPath.row];
+		NSArray *currentRows = [self currentRowsForSection:indexPath.section];
+		NSDictionary *row = currentRows[indexPath.row];
 		return [self.delegate menuView:self heightForItemWithIdentifier:row[kRSMenuIdentifier]];
 	}
 	return self.rowHeight;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+- (NSMutableArray *)updateMenuCellItemAttributes:(NSArray *)conf
 {
-	NSDictionary *row = _currentRows[indexPath.row];
-	NSUInteger indent = [row[@"indent"] integerValue];
+    NSMutableArray *atrributes = [NSMutableArray array];
+	if (conf) {
+		BOOL customize = [self.delegate respondsToSelector:@selector(menuView:attributesForItemWithIdentifier:)];
+		for (NSDictionary *config in conf) {
+			if (customize) {
+				id rid = config[kRSMenuIdentifier];
+				NSDictionary *attributes = [self.delegate menuView:self attributesForItemWithIdentifier:rid];
+				if (attributes) {
+					NSMutableDictionary *r = [config mutableCopy];
+					[r addEntriesFromDictionary:attributes];
+					[atrributes addObject:r];
+				} else {
+					[atrributes addObject:config];
+				}
+			} else {
+				[atrributes addObject:config];
+			}
+		}
+	}
+    return atrributes;
+}
 
+- (RSMenuCell *)cellForRow:(NSDictionary *)row
+{
+	NSUInteger indent = [row[@"indent"] integerValue];
+	
 	static NSString *cellIdentifier = @"RSMenuCell";
-	RSMenuCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+	RSMenuCell *cell = [_tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 	if (!cell) {
 		cell = [[RSMenuCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
 		CGRect frame = cell.contentView.bounds;
 		//imageview
-		CGFloat r = tableView.rowHeight - _rowEdgeInsets.top - _rowEdgeInsets.bottom;
-		cell.imageView.frame = CGRectMake(_rowEdgeInsets.left, _rowEdgeInsets.top, r, r);
+		CGFloat r = _tableView.rowHeight - _rowEdgeInsets.top - _rowEdgeInsets.bottom;
+		cell.leftView.frame = cell.imageView.frame = CGRectMake(_rowEdgeInsets.left, _rowEdgeInsets.top, r, r);
 		//textlabel
 		CGFloat x = r + _rowEdgeInsets.left * 2;
 		cell.rightView.frame = cell.textLabel.frame = CGRectMake(x, _rowEdgeInsets.top, frame.size.width - _rowEdgeInsets.right - x, r);
@@ -340,38 +466,26 @@ NSString * const kRSMenuItems = @"items";
 	cell.backgroundView.backgroundColor = [self rowBackgroundColorForIndent:indent];
 	[(RSRowBackgroundView *)cell.backgroundView setHighlighted:indent == 0];
 	cell.textLabel.text = row[@"title"];
-	NSString *leftview = row[@"leftview"];
+	id leftview = row[kRSMenuLeftView];
 	if (leftview) {
-		UIImage *image = [UIImage imageNamed:[NSString stringWithFormat:@"%@_active", leftview]];
-		cell.imageView.image = image ?: [UIImage imageNamed:leftview];
-		cell.imageView.highlightedImage = [UIImage imageNamed:[NSString stringWithFormat:@"%@_enabled", leftview]];
+		if ([leftview isKindOfClass:[NSDictionary class]]) {
+			NSMutableArray *leftViews = [self updateMenuCellItemAttributes:@[leftview]];
+			[cell.leftView loadItems:leftViews];
+			cell.imageView.image = nil;
+		} else {
+			UIImage *image = [UIImage imageNamed:[NSString stringWithFormat:@"%@_active", leftview]];
+			cell.imageView.image = image ?: [UIImage imageNamed:leftview];
+			cell.imageView.highlightedImage = [UIImage imageNamed:[NSString stringWithFormat:@"%@_enabled", leftview]];
+			cell.leftView.hidden = YES;
+		}
 	} else {
+		cell.leftView.hidden = YES;
 		cell.imageView.image = nil;
 	}
 	//rightviews
 	NSArray *subitems = row[kRSMenuItems];
-	NSArray *rightViewsConfiguration = row[kRSMenuRightViews];
 	NSString *identifier = row[kRSMenuIdentifier];
-	
-	NSMutableArray *rightViews = [NSMutableArray array];
-	if (rightViewsConfiguration) {
-		BOOL customize = [self.delegate respondsToSelector:@selector(menuView:attributesForItemWithIdentifier:)];
-		for (NSDictionary *config in rightViewsConfiguration) {
-			if (customize) {
-				id rid = config[kRSMenuIdentifier];
-				NSDictionary *attributes = [self.delegate menuView:self attributesForItemWithIdentifier:rid];
-				if (attributes) {
-					NSMutableDictionary *r = [config mutableCopy];
-					[r addEntriesFromDictionary:attributes];
-					[rightViews addObject:r];
-				} else {
-					[rightViews addObject:config];
-				}
-			} else {
-				[rightViews addObject:config];
-			}
-		}
-	}
+	NSMutableArray *rightViews = [self updateMenuCellItemAttributes:row[kRSMenuRightViews]];
 	if (subitems && identifier) {
 		BOOL opening = [_foldableRows[identifier] boolValue];
 		[rightViews addObject:@{
@@ -381,11 +495,19 @@ NSString * const kRSMenuItems = @"items";
 		 }];
 	}
 	[cell.rightView loadItems:rightViews];
+	return cell;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	NSDictionary *row = [self currentRowsForSection:indexPath.section][indexPath.row];
+	RSMenuCell *cell = [self cellForRow:row];
+	NSString *identifier = row[kRSMenuIdentifier];
 	if ([selectedIdentifier isEqualToString:identifier]) {
 		[cell setSelected:YES animated:NO];
 		indexPathOfSelectedRow = indexPath;
 	}
-	return cell;
+	return [self cellForRow:row];
 }
 
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -394,7 +516,7 @@ NSString * const kRSMenuItems = @"items";
 		[[tableView cellForRowAtIndexPath:indexPathOfSelectedRow] setSelected:NO animated:YES];
 		indexPathOfSelectedRow = nil;
 	}
-	NSDictionary *row = _currentRows[indexPath.row];
+	NSDictionary *row = [self currentRowsForSection:indexPath.section][indexPath.row];
 	NSArray *subitems = row[kRSMenuItems];
 	NSString *identifier = row[kRSMenuIdentifier];
 	if (subitems && identifier) {
@@ -421,15 +543,18 @@ NSString * const kRSMenuItems = @"items";
 	if (![selectedIdentifier isEqualToString:identifier]) {
 		selectedIdentifier = identifier;
 		if (everLayedout) {
-			int idx = 0;
-			NSIndexPath *selectIndexPath = nil;
-			for (NSDictionary *row in _currentRows) {
-				if ([row[kRSMenuIdentifier] isEqualToString:selectedIdentifier]) {
-					selectIndexPath = [NSIndexPath indexPathForRow:idx inSection:0];
-					break;
+			__block NSIndexPath *selectIndexPath = nil;
+			[_currentRows enumerateKeysAndObjectsUsingBlock:^(NSNumber *section, NSArray *currentRows, BOOL *stop) {
+				int idx = 0;
+				for (NSDictionary *row in currentRows) {
+					if ([row[kRSMenuIdentifier] isEqualToString:selectedIdentifier]) {
+						selectIndexPath = [NSIndexPath indexPathForRow:idx inSection:section.integerValue];
+						*stop = YES;
+						break;
+					}
+					idx++;
 				}
-				idx++;
-			}
+			}];
 			[_tableView selectRowAtIndexPath:selectIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
 		}
 	}
@@ -437,7 +562,7 @@ NSString * const kRSMenuItems = @"items";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	NSDictionary *row = _currentRows[indexPath.row];
+	NSDictionary *row = [self currentRowsForSection:indexPath.section][indexPath.row];
 	NSString *identifier = row[kRSMenuIdentifier];
 	if (identifier) {
 		if ([self.delegate respondsToSelector:@selector(menuView:didSelectItemWithIdentifier:)]) {

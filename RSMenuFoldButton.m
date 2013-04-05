@@ -6,7 +6,7 @@
 //
 
 #import "RSMenuFoldButton.h"
-#import "RSMenuRightView.h"
+#import "RSMenuCellItem.h"
 
 NSString * const kRSMenuOpening = @"opening";
 NSString * const RSMenuOpenNotification = @"RSMenuOpenNotification";

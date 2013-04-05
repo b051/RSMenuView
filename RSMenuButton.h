@@ -5,10 +5,10 @@
 //  Copyright (c) 2012 Log(n) LLC. All rights reserved.
 //
 
-#import "RSMenuRightViewInfo.h"
+#import "RSMenuCellItem.h"
 
 extern NSString * const RSMenuButtonClickedNotificationName;
 
-@interface RSMenuButton : UIView <RSMenuRightViewInfo>
+@interface RSMenuButton : UIView <RSMenuCellItem>
 
 @end

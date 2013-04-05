@@ -15,13 +15,33 @@
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
 	if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
+		self.textLabel.backgroundColor = [UIColor clearColor];
 		self.backgroundView = [[RSRowBackgroundView alloc] initWithFrame:self.contentView.bounds];
 		self.imageView.contentMode = UIViewContentModeCenter;
-		_rightView = [[RSMenuRightView alloc] initWithFrame:self.contentView.bounds];
-		self.rightView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleLeftMargin;
+		_rightView = [[RSMenuCellItem alloc] initWithFrame:self.contentView.bounds];
+		_rightView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleLeftMargin;
 		[self.contentView addSubview:_rightView];
+		_leftView = [[RSMenuCellItem alloc] initWithFrame:CGRectZero];
 	}
 	return self;
+}
+
+- (void)layoutSubviews
+{
+	[super layoutSubviews];
+	CGRect frame = self.textLabel.frame;
+	if (!self.leftView.hidden) {
+		CGRect lf = self.leftView.frame;
+		lf.origin.y = (self.bounds.size.height - lf.size.height) / 2;
+		self.leftView.frame = lf;
+		[self.contentView addSubview:self.leftView];
+		frame.origin.x = CGRectGetMaxX(lf) + lf.origin.x;
+	} else {
+		CGRect frame = self.textLabel.frame;
+		frame.origin.x = 30;
+		[self.leftView removeFromSuperview];
+	}
+	self.textLabel.frame = frame;
 }
 
 - (void)drawShadow

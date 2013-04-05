@@ -1,17 +1,16 @@
 //
-//  RSMenuRightView.m
+//  RSMenuCellItem.m
 //
 //  Created by Rex Sheng on 10/16/12.
 //  Copyright (c) 2012 Log(n) LLC. All rights reserved.
 //
 
-#import "RSMenuRightView.h"
-#import "RSMenuRightViewInfo.h"
+#import "RSMenuCellItem.h"
 
 NSString * const kRSMenuType = @"type";
 NSString * const kRSMenuIdentifier = @"identifier";
 
-@implementation RSMenuRightView
+@implementation RSMenuCellItem
 
 - (void)layoutSubviews
 {
@@ -33,6 +32,7 @@ NSString * const kRSMenuIdentifier = @"identifier";
 
 - (void)loadItems:(NSArray *)items
 {
+	self.hidden = items == nil;
 	for (UIView *view in self.subviews) {
 		[view removeFromSuperview];
 	}
@@ -41,7 +41,7 @@ NSString * const kRSMenuIdentifier = @"identifier";
 	
 	while (item = [enumerator nextObject]) {
 		Class clazz = NSClassFromString(item[kRSMenuType]);
-		if ([clazz conformsToProtocol:@protocol(RSMenuRightViewInfo)]) {
+		if ([clazz conformsToProtocol:@protocol(RSMenuCellItem)]) {
 			NSString *identifier = item[kRSMenuIdentifier];
 			UIView *view = [[clazz alloc] initWithIdentifier:identifier attributes:item];
 			[self addSubview:view];

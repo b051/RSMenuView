@@ -8,6 +8,7 @@
 #import <UIKit/UIKit.h>
 
 @class RSMenuView;
+@class RSMenuCell;
 
 @protocol RSMenuViewDelegate <NSObject>
 
@@ -33,10 +34,17 @@
 
 @property (nonatomic, weak) id<RSMenuViewDelegate> delegate;
 
-- (void)setItems:(NSArray *)configuration;
-- (void)insertItem:(NSDictionary *)item atRow:(NSUInteger)row;
-- (void)deleteItemAtRow:(NSUInteger)row;
-- (void)replaceItemAtRow:(NSUInteger)row withItem:(NSDictionary *)item;
+- (RSMenuCell *)cellForRow:(NSDictionary *)row;
+- (void)updateSectionItem:(NSDictionary *)item atSection:(NSUInteger)section;
+
+- (void)setItems:(NSArray *)configuration __deprecated;
+- (void)setItems:(NSArray *)configuration forSection:(NSUInteger)section sectionHeader:(NSDictionary *)sectionHeader;
+- (void)insertItem:(NSDictionary *)item atRow:(NSUInteger)row __deprecated;
+- (void)insertItem:(NSDictionary *)item atRow:(NSUInteger)row section:(NSUInteger)section;
+- (void)deleteItemAtRow:(NSUInteger)row __deprecated;
+- (void)deleteItemAtRow:(NSUInteger)row section:(NSUInteger)section;
+- (void)replaceItemAtRow:(NSUInteger)row withItem:(NSDictionary *)item __deprecated;
+- (void)replaceItemAtRow:(NSUInteger)row section:(NSUInteger)section withItem:(NSDictionary *)item;
 - (void)performBatchUpdates:(dispatch_block_t)updates;
 
 - (void)setTextFont:(UIFont *)font forIndent:(NSUInteger)indent UI_APPEARANCE_SELECTOR;
