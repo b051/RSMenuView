@@ -463,7 +463,6 @@ NSString * const kRSMenuItems = @"items";
 	cell.textLabel.font = [self textFontForIndent:indent];
 	cell.textLabel.textColor = [self textColorForIndent:indent];
 	cell.backgroundView.backgroundColor = [self rowBackgroundColorForIndent:indent];
-	[(RSRowBackgroundView *)cell.backgroundView setHighlighted:indent == 0];
 	cell.textLabel.text = row[@"title"];
 	id leftview = row[kRSMenuLeftView];
 	if (leftview) {
