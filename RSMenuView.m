@@ -288,6 +288,7 @@ NSString * const kRSMenuItems = @"items";
 
 - (void)insertItem:(NSDictionary *)item atRow:(NSUInteger)row section:(NSUInteger)section
 {
+	if (!_tableView) return;
 	if (!_inBatchUpdates) [_tableView beginUpdates];
 	
 	NSMutableArray *configuration = [self rowsForSection:section];
@@ -297,10 +298,10 @@ NSString * const kRSMenuItems = @"items";
 	if (configuration.count > row) {
 		relativeRow = [currentRows indexOfObject:configuration[row]];
 	}
+	
 	[configuration insertObject:item atIndex:row];
 	NSArray *paths = [self _insertItem:item atIndex:relativeRow section:section];
 	[_tableView insertRowsAtIndexPaths:paths withRowAnimation:_rowAnimation];
-	
 	if (!_inBatchUpdates) [_tableView endUpdates];
 }
 
@@ -503,9 +504,8 @@ NSString * const kRSMenuItems = @"items";
 	NSString *identifier = row[kRSMenuIdentifier];
 	if ([selectedIdentifier isEqualToString:identifier]) {
 		[cell setSelected:YES animated:NO];
-		indexPathOfSelectedRow = indexPath;
 	}
-	return [self cellForRow:row];
+	return cell;
 }
 
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath
