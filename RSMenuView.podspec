@@ -6,7 +6,7 @@ Pod::Spec.new do |s|
   s.homepage = 'https://github.com/b051/RSMenuView'
   s.authors  = { 'Rex Sheng' => 'rex@lognllc.com' }
   s.source   = { :git => 'https://github.com/b051/RSMenuView.git', :tag => s.version.to_s }
-  s.source_files = 'RS*\.[hm]'
+  s.source_files = 'RS*.{h,m}'
   s.requires_arc = true
   s.ios.deployment_target = '5.0'
 end
