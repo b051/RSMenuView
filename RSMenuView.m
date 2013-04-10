@@ -38,6 +38,32 @@ NSString * const kRSMenuItems = @"items";
 
 @dynamic menuHeaderView, menuFooterView;
 
+- (id)initWithFrame:(CGRect)frame
+{
+	if (self = [super initWithFrame:frame]) {
+		cellClass = [RSMenuCell class];
+		self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+		_tableView = [[UITableView alloc] initWithFrame:self.bounds style:UITableViewStylePlain];
+		_tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+		[self addSubview:_tableView];
+		_tableView.delegate = self;
+		_textColor = [UIColor whiteColor];
+		_textShadowOffset = CGSizeMake(0, 1);
+		_tableView.dataSource = self;
+		_tableView.backgroundColor = [UIColor clearColor];
+		_tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+		_foldableRows = [NSMutableDictionary dictionary];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(menuFoldingChanged:) name:RSMenuOpenNotification object:nil];
+	}
+	return self;
+}
+
+- (void)dealloc
+{
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+#pragma mark - Appearance API
 - (void)setTextFont:(UIFont *)font forIndent:(NSUInteger)indent
 {
 	if (!textFonts) {
@@ -85,26 +111,6 @@ NSString * const kRSMenuItems = @"items";
 	return [UIColor clearColor];
 }
 
-- (id)initWithFrame:(CGRect)frame
-{
-	if (self = [super initWithFrame:frame]) {
-		cellClass = [RSMenuCell class];
-		self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-		_tableView = [[UITableView alloc] initWithFrame:self.bounds style:UITableViewStylePlain];
-		_tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-		[self addSubview:_tableView];
-		_tableView.delegate = self;
-		_textColor = [UIColor whiteColor];
-		_textShadowOffset = CGSizeMake(0, 1);
-		_tableView.dataSource = self;
-		_tableView.backgroundColor = [UIColor clearColor];
-		_tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-		_foldableRows = [NSMutableDictionary dictionary];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(menuFoldingChanged:) name:RSMenuOpenNotification object:nil];
-	}
-	return self;
-}
-
 - (void)setMenuFooterView:(UIView *)menuFooterView
 {
 	_tableView.tableFooterView = menuFooterView;
@@ -123,11 +129,6 @@ NSString * const kRSMenuItems = @"items";
 - (void)setMenuHeaderView:(UIView *)menuHeaderView
 {
 	_tableView.tableHeaderView = menuHeaderView;
-}
-
-- (void)dealloc
-{
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)setRowHeight:(CGFloat)rowHeight
@@ -162,6 +163,35 @@ NSString * const kRSMenuItems = @"items";
 		_currentRows[@(section)] = sectionConfig;
 	}
 	return sectionConfig;
+}
+
+#pragma mark - Menu Operations
+- (NSIndexPath *)indexPathOfDisplayingRowsWithIdentifier:(NSString *)identifier
+{
+	__block NSIndexPath *indexPath = nil;
+	[_currentRows enumerateKeysAndObjectsUsingBlock:^(NSNumber *section, NSArray *currentRows, BOOL *stop) {
+		int idx = 0;
+		for (NSDictionary *row in currentRows) {
+			if ([row[kRSMenuIdentifier] isEqualToString:identifier]) {
+				indexPath = [NSIndexPath indexPathForRow:idx inSection:section.integerValue];
+				*stop = YES;
+				break;
+			}
+			idx++;
+		}
+	}];
+	return indexPath;
+}
+
+- (void)setItemSelectedWithIdentifier:(NSString *)identifier
+{
+	if (![selectedIdentifier isEqualToString:identifier]) {
+		selectedIdentifier = identifier;
+		if (everLayedout) {
+			NSIndexPath *selectIndexPath = [self indexPathOfDisplayingRowsWithIdentifier:identifier];
+			if (selectIndexPath) [_tableView selectRowAtIndexPath:selectIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+		}
+	}
 }
 
 - (void)menuFoldingChanged:(NSNotification *)note
@@ -535,28 +565,6 @@ NSString * const kRSMenuItems = @"items";
 {
 	everLayedout = YES;
 	[super layoutSubviews];
-}
-
-- (void)setItemSelectedWithIdentifier:(NSString *)identifier
-{
-	if (![selectedIdentifier isEqualToString:identifier]) {
-		selectedIdentifier = identifier;
-		if (everLayedout) {
-			__block NSIndexPath *selectIndexPath = nil;
-			[_currentRows enumerateKeysAndObjectsUsingBlock:^(NSNumber *section, NSArray *currentRows, BOOL *stop) {
-				int idx = 0;
-				for (NSDictionary *row in currentRows) {
-					if ([row[kRSMenuIdentifier] isEqualToString:selectedIdentifier]) {
-						selectIndexPath = [NSIndexPath indexPathForRow:idx inSection:section.integerValue];
-						*stop = YES;
-						break;
-					}
-					idx++;
-				}
-			}];
-			[_tableView selectRowAtIndexPath:selectIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
-		}
-	}
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
