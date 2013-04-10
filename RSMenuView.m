@@ -503,6 +503,7 @@ NSString * const kRSMenuItems = @"items";
 	RSMenuCell *cell = [self cellForRow:row];
 	NSString *identifier = row[kRSMenuIdentifier];
 	if ([selectedIdentifier isEqualToString:identifier]) {
+		[tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
 		[cell setSelected:YES animated:NO];
 	}
 	return cell;
@@ -563,8 +564,8 @@ NSString * const kRSMenuItems = @"items";
 	NSDictionary *row = [self currentRowsForSection:indexPath.section][indexPath.row];
 	NSString *identifier = row[kRSMenuIdentifier];
 	if (identifier) {
+		selectedIdentifier = identifier;
 		if ([self.delegate respondsToSelector:@selector(menuView:didSelectItemWithIdentifier:)]) {
-			selectedIdentifier = identifier;
 			[self.delegate menuView:self didSelectItemWithIdentifier:identifier];
 		}
 	}
