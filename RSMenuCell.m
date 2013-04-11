@@ -77,8 +77,16 @@
 	[self drawShadow];
 	self.textLabel.highlighted = selected;
 	self.imageView.highlighted = selected;
-	if (_selectedBackgroundColor) {
-		[self.backgroundView setBackgroundColor:selected ? _selectedBackgroundColor : [UIColor clearColor]];
+	if (self.selectedBackgroundColor) {
+		[self.backgroundView setBackgroundColor:selected ? self.selectedBackgroundColor : [UIColor clearColor]];
+	}
+}
+
+- (void)setSelectedBackgroundColor:(UIColor *)selectedBackgroundColor
+{
+	_selectedBackgroundColor = selectedBackgroundColor;
+	if (selectedBackgroundColor) {
+		[self.backgroundView setBackgroundColor:(selected | highlighted) ? selectedBackgroundColor : [UIColor clearColor]];
 	}
 }
 
@@ -88,8 +96,8 @@
 	[self drawShadow];
 	self.textLabel.highlighted = highlighted;
 	self.imageView.highlighted = highlighted;
-	if (_selectedBackgroundColor) {
-		[self.backgroundView setBackgroundColor:highlighted ? _selectedBackgroundColor : [UIColor clearColor]];
+	if (self.selectedBackgroundColor) {
+		[self.backgroundView setBackgroundColor:highlighted ? self.selectedBackgroundColor : [UIColor clearColor]];
 	}
 }
 

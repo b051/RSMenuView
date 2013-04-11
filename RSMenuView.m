@@ -538,6 +538,7 @@ NSString * const kRSMenuItems = @"items";
 	static NSString *cellIdentifier = @"RSMenuCell";
 	RSMenuCell *cell = [self cellForRow:row identifier:cellIdentifier];
 	if ([selectedIdentifier isEqualToString:cell.identifier]) {
+		indexPathOfSelectedRow = indexPath;
 		[tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
 		[cell setSelected:YES animated:NO];
 	}
