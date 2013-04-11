@@ -20,4 +20,6 @@ extern NSString * const kRSMenuIdentifier;
 
 - (void)loadItems:(NSArray *)items;
 
+@property (nonatomic) UITextAlignment alignment;
+
 @end

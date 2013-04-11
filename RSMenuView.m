@@ -432,9 +432,13 @@ NSString * const kRSMenuItems = @"items";
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
 	NSDictionary *config = _sectionHeaders[@(section)];
-	RSMenuCell *view = nil;
+	UIView *view = nil;
 	if (config) {
-		view = [self cellForRow:config];
+		view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 320)];
+		RSMenuCell *cell = [self cellForRow:config identifier:@"header"];
+		cell.frame = view.bounds;
+		cell.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+		[view addSubview:cell];
 	}
 	return view;
 }
@@ -473,11 +477,10 @@ NSString * const kRSMenuItems = @"items";
     return atrributes;
 }
 
-- (RSMenuCell *)cellForRow:(NSDictionary *)row
+- (RSMenuCell *)cellForRow:(NSDictionary *)row identifier:(NSString *)cellIdentifier
 {
 	NSUInteger indent = [row[@"indent"] integerValue];
 	
-	static NSString *cellIdentifier = @"RSMenuCell";
 	RSMenuCell *cell = [_tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 	if (!cell) {
 		cell = [[RSMenuCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
@@ -530,7 +533,8 @@ NSString * const kRSMenuItems = @"items";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	NSDictionary *row = [self currentRowsForSection:indexPath.section][indexPath.row];
-	RSMenuCell *cell = [self cellForRow:row];
+	static NSString *cellIdentifier = @"RSMenuCell";
+	RSMenuCell *cell = [self cellForRow:row identifier:cellIdentifier];
 	NSString *identifier = row[kRSMenuIdentifier];
 	if ([selectedIdentifier isEqualToString:identifier]) {
 		[tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];

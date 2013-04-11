@@ -19,9 +19,11 @@
 		self.backgroundView = [[RSRowBackgroundView alloc] initWithFrame:self.contentView.bounds];
 		self.imageView.contentMode = UIViewContentModeCenter;
 		_rightView = [[RSMenuCellItem alloc] initWithFrame:self.contentView.bounds];
+		_rightView.alignment = UITextAlignmentRight;
 		_rightView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleLeftMargin;
 		[self.contentView addSubview:_rightView];
 		_leftView = [[RSMenuCellItem alloc] initWithFrame:CGRectZero];
+		_leftView.alignment = UITextAlignmentCenter;
 	}
 	return self;
 }

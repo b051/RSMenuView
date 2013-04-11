@@ -14,15 +14,46 @@ NSString * const kRSMenuIdentifier = @"identifier";
 
 - (void)layoutSubviews
 {
-	CGFloat x = self.bounds.size.width;
 	CGFloat h = self.bounds.size.height;
-
+	
+	CGFloat width = 0;
+	NSMutableArray *sizes = [NSMutableArray array];
 	for (UIView *view in self.subviews) {
 		if ([view conformsToProtocol:@protocol(RSMenuCellItem)]) {
 			CGSize size = [view sizeThatFits:CGSizeZero];
-			x -= size.width;
-			size.height = h;
-			view.frame = CGRectMake(x, 0, size.width, size.height);
+			[sizes addObject:[NSValue valueWithCGSize:size]];
+			width += size.width;
+		}
+	}
+	CGFloat initValue, step, gap = 0;
+	if (self.alignment == UITextAlignmentCenter) {
+		gap = (self.bounds.size.width - width) / (sizes.count + 1);
+		initValue = gap;
+		step = 1;
+	} else if (self.alignment == UITextAlignmentRight) {
+		initValue = self.bounds.size.width;
+		step = -1;
+	} else {
+		initValue = 0;
+		step = 1;
+	}
+	
+	CGFloat x = initValue;
+	int i = 0;
+	for (UIView *view in self.subviews) {
+		if ([view conformsToProtocol:@protocol(RSMenuCellItem)]) {
+			CGRect frame = view.frame;
+			CGSize size = [(NSValue *)sizes[i++] CGSizeValue];
+			if (step > 0) {
+				frame.origin.x = x;
+				x += size.width * step + gap;
+			} else {
+				x += size.width * step - gap;
+				frame.origin.x = x;
+			}
+			frame.origin.y = (h - size.height) / 2;
+			frame.size = size;
+			view.frame = frame;
 		}
 	}
 	[super layoutSubviews];

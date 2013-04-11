@@ -34,7 +34,6 @@
 
 @property (nonatomic, weak) id<RSMenuViewDelegate> delegate;
 
-- (RSMenuCell *)cellForRow:(NSDictionary *)row;
 - (void)updateSectionItem:(NSDictionary *)item atSection:(NSUInteger)section;
 
 - (void)setItems:(NSArray *)configuration __deprecated;

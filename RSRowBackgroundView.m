@@ -41,7 +41,7 @@
 		ruler = [[UIImageView alloc] initWithImage:rowSeperatorImage];
 		CGRect frame = ruler.frame;
 		frame.size.width = self.bounds.size.width;
-		frame.origin.y = self.bounds.size.height - 1;
+		frame.origin.y = self.bounds.size.height - frame.size.height;
 		ruler.frame = frame;
 		[self addSubview:ruler];
 	} else {
