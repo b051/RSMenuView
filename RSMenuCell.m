@@ -53,6 +53,7 @@
 
 - (void)setRowSeperatorImage:(UIImage *)rowSeperatorImage
 {
+	NSLog(@"set rowSeperatorImage %@", rowSeperatorImage);
 	[(RSRowBackgroundView *)self.backgroundView setRowSeperatorImage:rowSeperatorImage];
 }
 

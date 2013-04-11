@@ -16,12 +16,14 @@ NSString * const kRSMenuIdentifier = @"identifier";
 {
 	CGFloat x = self.bounds.size.width;
 	CGFloat h = self.bounds.size.height;
-	
+
 	for (UIView *view in self.subviews) {
-		CGSize size = [view sizeThatFits:CGSizeZero];
-		x -= size.width;
-		size.height = h;
-		view.frame = CGRectMake(x, 0, size.width, size.height);
+		if ([view conformsToProtocol:@protocol(RSMenuCellItem)]) {
+			CGSize size = [view sizeThatFits:CGSizeZero];
+			x -= size.width;
+			size.height = h;
+			view.frame = CGRectMake(x, 0, size.width, size.height);
+		}
 	}
 	[super layoutSubviews];
 }
@@ -34,7 +36,9 @@ NSString * const kRSMenuIdentifier = @"identifier";
 {
 	self.hidden = items == nil;
 	for (UIView *view in self.subviews) {
-		[view removeFromSuperview];
+		if ([view conformsToProtocol:@protocol(RSMenuCellItem)]) {
+			[view removeFromSuperview];
+		}
 	}
 	NSDictionary *item = nil;
 	NSEnumerator *enumerator = [items reverseObjectEnumerator];

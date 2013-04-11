@@ -11,6 +11,7 @@
 {
 	UIImageView *ruler;
 }
+
 @synthesize highlighted=_highlighted;
 
 - (id)initWithFrame:(CGRect)frame
@@ -62,11 +63,6 @@
 	CGContextFillRect(context, CGRectMake(0, rect.size.height - lineHeight, rect.size.width, lineHeight));
 	CGContextSetGrayFillColor(context, 1, _highlighted ? _highlightedAlpha : _normalAlpha);
 	CGContextFillRect(context, CGRectMake(0, 0, rect.size.width, lineHeight));
-
-	//	if (_highlighted) {
-//		CGContextSetGrayFillColor(context, 1, _normalAlpha);
-//		CGContextFillRect(context, CGRectInset(rect, 0, lineHeight));
-//	}
 }
 
 @end
