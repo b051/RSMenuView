@@ -439,6 +439,7 @@ NSString * const kRSMenuItems = @"items";
 		cell.frame = view.bounds;
 		cell.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
 		[view addSubview:cell];
+		[view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapSectionHeader:)]];
 	}
 	return view;
 }
@@ -517,6 +518,7 @@ NSString * const kRSMenuItems = @"items";
 	//rightviews
 	NSArray *subitems = row[kRSMenuItems];
 	NSString *identifier = row[kRSMenuIdentifier];
+	cell.identifier = identifier;
 	NSMutableArray *rightViews = [self updateMenuCellItemAttributes:row[kRSMenuRightViews]];
 	if (subitems && identifier) {
 		BOOL opening = [_foldableRows[identifier] boolValue];
@@ -535,8 +537,7 @@ NSString * const kRSMenuItems = @"items";
 	NSDictionary *row = [self currentRowsForSection:indexPath.section][indexPath.row];
 	static NSString *cellIdentifier = @"RSMenuCell";
 	RSMenuCell *cell = [self cellForRow:row identifier:cellIdentifier];
-	NSString *identifier = row[kRSMenuIdentifier];
-	if ([selectedIdentifier isEqualToString:identifier]) {
+	if ([selectedIdentifier isEqualToString:cell.identifier]) {
 		[tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
 		[cell setSelected:YES animated:NO];
 	}
@@ -577,6 +578,16 @@ NSString * const kRSMenuItems = @"items";
 	NSString *identifier = row[kRSMenuIdentifier];
 	if (identifier) {
 		selectedIdentifier = identifier;
+		if ([self.delegate respondsToSelector:@selector(menuView:didSelectItemWithIdentifier:)]) {
+			[self.delegate menuView:self didSelectItemWithIdentifier:identifier];
+		}
+	}
+}
+
+- (void)tapSectionHeader:(UITapGestureRecognizer *)tap
+{
+	if (tap.state == UIGestureRecognizerStateRecognized) {
+		NSString *identifier = ((RSMenuCell *)(tap.view.subviews[0])).identifier;
 		if ([self.delegate respondsToSelector:@selector(menuView:didSelectItemWithIdentifier:)]) {
 			[self.delegate menuView:self didSelectItemWithIdentifier:identifier];
 		}

@@ -18,4 +18,6 @@
 @property (nonatomic, strong) UIImage *rowSeperatorImage UI_APPEARANCE_SELECTOR;
 @property (nonatomic, strong) UIColor *selectedBackgroundColor UI_APPEARANCE_SELECTOR;
 
+@property (nonatomic, strong) NSString *identifier;
+
 @end
