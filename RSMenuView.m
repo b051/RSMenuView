@@ -437,6 +437,7 @@ NSString * const kRSMenuItems = @"items";
 		view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 320)];
 		RSMenuCell *cell = [self cellForRow:config identifier:@"header"];
 		cell.frame = view.bounds;
+		[cell setNeedsDisplay];
 		cell.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
 		[view addSubview:cell];
 		[view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapSectionHeader:)]];
@@ -497,7 +498,7 @@ NSString * const kRSMenuItems = @"items";
 	//indent
 	cell.textLabel.font = [self textFontForIndent:indent];
 	cell.textLabel.textColor = [self textColorForIndent:indent];
-	cell.backgroundView.backgroundColor = [self rowBackgroundColorForIndent:indent];
+	((RSRowBackgroundView *)cell.backgroundView).rowBackgroundColor = [self rowBackgroundColorForIndent:indent];
 	cell.textLabel.text = row[@"title"];
 	id leftview = row[kRSMenuLeftView];
 	if (leftview) {

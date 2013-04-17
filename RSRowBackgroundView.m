@@ -18,8 +18,9 @@
 {
 	if (self = [super initWithFrame:frame]) {
 		self.contentMode = UIViewContentModeRedraw;
-		self.clipsToBounds = NO;
 		self.backgroundColor = [UIColor clearColor];
+		self.clipsToBounds = NO;
+		self.backgroundColor = nil;
 		_normalAlpha = .11f;
 		_highlightedAlpha = .28f;
 	}
@@ -48,6 +49,17 @@
 		self.contentMode = UIViewContentModeRedraw;
 	}
 	[self setNeedsDisplay];
+}
+
+- (void)setRowBackgroundColor:(UIColor *)rowBackgroundColor
+{
+	_rowBackgroundColor = rowBackgroundColor;
+	self.backgroundColor = rowBackgroundColor;
+}
+
+- (void)setBackgroundColor:(UIColor *)backgroundColor
+{
+	[super setBackgroundColor:backgroundColor ?: _rowBackgroundColor];
 }
 
 - (void)drawRect:(CGRect)rect

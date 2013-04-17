@@ -55,7 +55,6 @@
 
 - (void)setRowSeperatorImage:(UIImage *)rowSeperatorImage
 {
-	NSLog(@"set rowSeperatorImage %@", rowSeperatorImage);
 	[(RSRowBackgroundView *)self.backgroundView setRowSeperatorImage:rowSeperatorImage];
 }
 
@@ -78,7 +77,7 @@
 	self.textLabel.highlighted = selected;
 	self.imageView.highlighted = selected;
 	if (self.selectedBackgroundColor) {
-		[self.backgroundView setBackgroundColor:selected ? self.selectedBackgroundColor : [UIColor clearColor]];
+		[self.backgroundView setBackgroundColor:selected ? self.selectedBackgroundColor : nil];
 	}
 }
 
@@ -86,7 +85,7 @@
 {
 	_selectedBackgroundColor = selectedBackgroundColor;
 	if (selectedBackgroundColor) {
-		[self.backgroundView setBackgroundColor:(selected | highlighted) ? selectedBackgroundColor : [UIColor clearColor]];
+		[self.backgroundView setBackgroundColor:(selected | highlighted) ? selectedBackgroundColor : nil];
 	}
 }
 
@@ -97,7 +96,7 @@
 	self.textLabel.highlighted = highlighted;
 	self.imageView.highlighted = highlighted;
 	if (self.selectedBackgroundColor) {
-		[self.backgroundView setBackgroundColor:highlighted ? self.selectedBackgroundColor : [UIColor clearColor]];
+		[self.backgroundView setBackgroundColor:highlighted ? self.selectedBackgroundColor : nil];
 	}
 }
 
