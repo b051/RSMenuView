@@ -16,14 +16,16 @@
 {
 	if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
 		self.textLabel.backgroundColor = [UIColor clearColor];
+		self.textLabel.lineBreakMode = UILineBreakModeMiddleTruncation;
 		self.backgroundView = [[RSRowBackgroundView alloc] initWithFrame:self.contentView.bounds];
 		self.imageView.contentMode = UIViewContentModeCenter;
+		_leftView = [[RSMenuCellItem alloc] initWithFrame:CGRectZero];
+		_leftView.alignment = UITextAlignmentCenter;
 		_rightView = [[RSMenuCellItem alloc] initWithFrame:self.contentView.bounds];
 		_rightView.alignment = UITextAlignmentRight;
 		_rightView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleLeftMargin;
 		[self.contentView addSubview:_rightView];
-		_leftView = [[RSMenuCellItem alloc] initWithFrame:CGRectZero];
-		_leftView.alignment = UITextAlignmentCenter;
+		
 	}
 	return self;
 }
@@ -31,21 +33,25 @@
 - (void)layoutSubviews
 {
 	[super layoutSubviews];
-	CGRect frame = self.textLabel.frame;
+	CGRect tf = self.textLabel.frame;
+	[self.rightView layoutSubviews];
 	CGRect rf = self.rightView.frame;
-	frame.origin.x = rf.origin.x;
+	UIView *mostLeftRightView = self.rightView.subviews.lastObject;
+	CGFloat maxX = (mostLeftRightView ? mostLeftRightView.frame.origin.x : rf.size.width) + rf.origin.x;
+	tf.origin.x = rf.origin.x;
 	if (!self.leftView.hidden) {
 		CGRect lf = self.leftView.frame;
 		lf.origin.y = (self.bounds.size.height - lf.size.height) / 2;
-		lf.origin.x = (frame.origin.x - lf.size.width) / 2;
+		lf.origin.x = (tf.origin.x - lf.size.width) / 2;
 		self.leftView.frame = lf;
 		[self.contentView addSubview:self.leftView];
-		frame.origin.x = CGRectGetMaxX(lf) + lf.origin.x;
+		tf.origin.x = CGRectGetMaxX(lf) + lf.origin.x;
 	} else {
-		self.imageView.center = CGPointMake(frame.origin.x / 2, frame.size.height / 2);
+		self.imageView.center = CGPointMake(tf.origin.x / 2, tf.size.height / 2);
 		[self.leftView removeFromSuperview];
 	}
-	self.textLabel.frame = frame;
+	tf.size.width = maxX - tf.origin.x;
+	self.textLabel.frame = tf;
 }
 
 - (void)drawShadow

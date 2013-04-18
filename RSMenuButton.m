@@ -23,8 +23,9 @@ NSString * const RSMenuButtonClickedNotificationName = @"RSMenuButtonClickedNoti
 		UIImage *icon = [UIImage imageNamed:attributes[@"image"]];
 		[button addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
 		[button setImage:icon forState:UIControlStateNormal];
-		self.frame = button.frame = CGRectMake(0, 0, MAX(icon.size.width, 26), icon.size.height);
+		self.frame = CGRectMake(0, 0, MAX(icon.size.width, 26), icon.size.height);
 		button.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+		button.frame = self.bounds;
 		[self addSubview:button];
 	}
 	return self;

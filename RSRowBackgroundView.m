@@ -18,7 +18,7 @@
 {
 	if (self = [super initWithFrame:frame]) {
 		self.contentMode = UIViewContentModeRedraw;
-		self.backgroundColor = [UIColor clearColor];
+		self.rowBackgroundColor = [UIColor clearColor];
 		self.clipsToBounds = NO;
 		self.backgroundColor = nil;
 		_normalAlpha = .11f;
