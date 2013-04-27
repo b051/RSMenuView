@@ -434,10 +434,8 @@ NSString * const kRSMenuItems = @"items";
 	NSDictionary *config = _sectionHeaders[@(section)];
 	UIView *view = nil;
 	if (config) {
-		view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 320)];
 		RSMenuCell *cell = [self cellForRow:config identifier:@"header"];
-		cell.frame = view.bounds;
-		[cell setNeedsDisplay];
+		view = [[UIView alloc] initWithFrame:cell.bounds];
 		cell.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
 		[view addSubview:cell];
 		[view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapSectionHeader:)]];
