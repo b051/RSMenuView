@@ -288,7 +288,8 @@ NSString * const kRSMenuItems = @"items";
 	[_foldableRows removeAllObjects];
 	NSMutableArray *currentRows = [self currentRowsForSection:section];
 	[currentRows removeAllObjects];
-	[[self rowsForSection:section] addObjectsFromArray:configuration];
+	if (!_configuration) _configuration = [@{} mutableCopy];
+	_configuration[@(section)] = configuration;
 	if (sectionHeader) {
 		if (!_sectionHeaders) _sectionHeaders = [@{} mutableCopy];
 		_sectionHeaders[@(section)] = sectionHeader;
