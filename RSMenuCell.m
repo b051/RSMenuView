@@ -23,7 +23,7 @@
 		_leftView.alignment = UITextAlignmentCenter;
 		_rightView = [[RSMenuCellItem alloc] initWithFrame:self.contentView.bounds];
 		_rightView.alignment = UITextAlignmentRight;
-		_rightView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleLeftMargin;
+		_rightView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		[self.contentView addSubview:_rightView];
 		
 	}
@@ -33,6 +33,7 @@
 - (void)layoutSubviews
 {
 	[super layoutSubviews];
+	
 	CGRect tf = self.textLabel.frame;
 	[self.rightView layoutSubviews];
 	CGRect rf = self.rightView.frame;
