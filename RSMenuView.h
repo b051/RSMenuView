@@ -23,6 +23,7 @@
 
 @property (nonatomic, strong) UIView *menuHeaderView;
 @property (nonatomic, strong) UIView *menuFooterView;
+@property (nonatomic) BOOL showsVerticalScrollIndicator;
 @property (nonatomic) UITableViewRowAnimation rowAnimation;
 @property (nonatomic, strong) UIColor *textColor UI_APPEARANCE_SELECTOR;
 @property (nonatomic, strong) UIColor *highlightedTextColor UI_APPEARANCE_SELECTOR;

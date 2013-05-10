@@ -10,6 +10,7 @@
 @implementation RSRowBackgroundView
 {
 	UIImageView *ruler;
+	UIImageView *upperRuler;
 }
 
 @synthesize highlighted=_highlighted;
@@ -42,13 +43,34 @@
 		ruler = [[UIImageView alloc] initWithImage:rowSeperatorImage];
 		CGRect frame = ruler.frame;
 		frame.size.width = self.bounds.size.width;
-		frame.origin.y = self.bounds.size.height - frame.size.height;
+		frame.origin.y = self.bounds.size.height;// - frame.size.height;
 		ruler.frame = frame;
 		[self addSubview:ruler];
 	} else {
 		self.contentMode = UIViewContentModeRedraw;
 	}
+	[self setAlsoShowTopSeperator:_alsoShowTopSeperator];
 	[self setNeedsDisplay];
+}
+
+- (void)setAlsoShowTopSeperator:(BOOL)alsoShowTopSeperator
+{
+	_alsoShowTopSeperator = alsoShowTopSeperator;
+	[upperRuler removeFromSuperview];
+	if (alsoShowTopSeperator) {
+		if (_rowSeperatorImage) {
+			self.contentMode = UIViewContentModeScaleToFill;
+			upperRuler = [[UIImageView alloc] initWithImage:_rowSeperatorImage];
+			CGRect frame = upperRuler.frame;
+			frame.size.width = self.bounds.size.width;
+			frame.origin.y = 0;
+			upperRuler.frame = frame;
+			[self addSubview:upperRuler];
+		} else {
+			self.contentMode = UIViewContentModeRedraw;
+			[self setNeedsDisplay];
+		}
+	}
 }
 
 - (void)setRowBackgroundColor:(UIColor *)rowBackgroundColor

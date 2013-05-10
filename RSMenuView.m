@@ -36,7 +36,7 @@ NSString * const kRSMenuItems = @"items";
 	NSMutableDictionary *rowBackgroundColors;
 }
 
-@dynamic menuHeaderView, menuFooterView;
+@dynamic menuHeaderView, menuFooterView, showsVerticalScrollIndicator;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -56,6 +56,16 @@ NSString * const kRSMenuItems = @"items";
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(menuFoldingChanged:) name:RSMenuOpenNotification object:nil];
 	}
 	return self;
+}
+
+- (void)setShowsVerticalScrollIndicator:(BOOL)showsVerticalScrollIndicator
+{
+	_tableView.showsVerticalScrollIndicator = showsVerticalScrollIndicator;
+}
+
+- (BOOL)showsVerticalScrollIndicator
+{
+	return _tableView.showsVerticalScrollIndicator;
 }
 
 - (void)dealloc
@@ -436,6 +446,8 @@ NSString * const kRSMenuItems = @"items";
 	UIView *view = nil;
 	if (config) {
 		RSMenuCell *cell = [self cellForRow:config identifier:@"header"];
+		RSRowBackgroundView *backgroundView = (RSRowBackgroundView *)cell.backgroundView;
+		backgroundView.alsoShowTopSeperator = section == 0;
 		view = [[UIView alloc] initWithFrame:cell.bounds];
 		cell.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
 		[view addSubview:cell];
@@ -542,6 +554,8 @@ NSString * const kRSMenuItems = @"items";
 		[tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
 		[cell setSelected:YES animated:NO];
 	}
+	RSRowBackgroundView *backgroundView = (RSRowBackgroundView *)cell.backgroundView;
+	backgroundView.alsoShowTopSeperator = indexPath.section == 0 && indexPath.row == 0 && [self tableView:tableView heightForHeaderInSection:indexPath.section] == 0;
 	return cell;
 }
 
