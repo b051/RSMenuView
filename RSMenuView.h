@@ -30,6 +30,7 @@
 
 @property (nonatomic) CGFloat rowHeight UI_APPEARANCE_SELECTOR;
 @property (nonatomic) UIEdgeInsets rowEdgeInsets UI_APPEARANCE_SELECTOR;
+@property (nonatomic) UIEdgeInsets scrollIndicatorInsets UI_APPEARANCE_SELECTOR;
 
 @property (nonatomic) CGSize textShadowOffset UI_APPEARANCE_SELECTOR;
 
