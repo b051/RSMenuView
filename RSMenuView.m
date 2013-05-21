@@ -151,6 +151,16 @@ NSString * const kRSMenuItems = @"items";
 	return _tableView.rowHeight;
 }
 
+- (UIEdgeInsets)scrollIndicatorInsets
+{
+	return _tableView.scrollIndicatorInsets;
+}
+
+- (void)setScrollIndicatorInsets:(UIEdgeInsets)scrollIndicatorInsets
+{
+	_tableView.scrollIndicatorInsets = scrollIndicatorInsets;
+}
+
 - (NSMutableArray *)rowsForSection:(NSUInteger)section
 {
 	if (!_configuration) _configuration = [@{} mutableCopy];
