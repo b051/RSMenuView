@@ -205,7 +205,10 @@ NSString * const kRSMenuItems = @"items";
 
 - (void)setItemSelectedWithIdentifier:(NSString *)identifier
 {
-	if (![selectedIdentifier isEqualToString:identifier]) {
+	if (!identifier) {
+		[_tableView deselectRowAtIndexPath:[_tableView indexPathForSelectedRow] animated:NO];
+		selectedIdentifier = identifier;
+	} else if (![selectedIdentifier isEqualToString:identifier]) {
 		selectedIdentifier = identifier;
 		if (everLayedout) {
 			NSIndexPath *selectIndexPath = [self indexPathOfDisplayingRowsWithIdentifier:identifier];
