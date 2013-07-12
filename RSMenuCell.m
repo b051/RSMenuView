@@ -16,14 +16,21 @@
 {
 	if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
 		self.textLabel.backgroundColor = [UIColor clearColor];
-		self.textLabel.lineBreakMode = UILineBreakModeMiddleTruncation;
 		self.backgroundView = [[RSRowBackgroundView alloc] initWithFrame:self.contentView.bounds];
 		self.imageView.contentMode = UIViewContentModeCenter;
 		_leftView = [[RSMenuCellItem alloc] initWithFrame:CGRectZero];
-		_leftView.alignment = UITextAlignmentCenter;
 		_rightView = [[RSMenuCellItem alloc] initWithFrame:self.contentView.bounds];
-		_rightView.alignment = UITextAlignmentRight;
 		_rightView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+
+#ifdef __IPHONE_6_0
+		self.textLabel.lineBreakMode = NSLineBreakByTruncatingMiddle;
+		_leftView.alignment = NSTextAlignmentCenter;
+		_rightView.alignment = NSTextAlignmentRight;
+#else
+		self.textLabel.lineBreakMode = UILineBreakModeMiddleTruncation;
+		_leftView.alignment = UITextAlignmentCenter;
+		_rightView.alignment = UITextAlignmentRight;
+#endif
 		[self.contentView addSubview:_rightView];
 		
 	}

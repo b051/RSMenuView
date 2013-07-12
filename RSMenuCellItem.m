@@ -26,11 +26,19 @@ NSString * const kRSMenuIdentifier = @"identifier";
 		}
 	}
 	CGFloat initValue, step, gap = 0;
+#ifdef __IPHONE_6_0
+	if (self.alignment == NSTextAlignmentCenter) {
+#else
 	if (self.alignment == UITextAlignmentCenter) {
+#endif
 		gap = (self.bounds.size.width - width) / (sizes.count + 1);
 		initValue = gap;
 		step = 1;
+#ifdef __IPHONE_6_0
+	} else if (self.alignment == NSTextAlignmentRight) {
+#else
 	} else if (self.alignment == UITextAlignmentRight) {
+#endif
 		initValue = self.bounds.size.width;
 		step = -1;
 	} else {
