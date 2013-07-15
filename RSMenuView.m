@@ -460,7 +460,7 @@ NSString * const kRSMenuItems = @"items";
 	if (config) {
 		RSMenuCell *cell = [self cellForRow:config identifier:@"header"];
 		RSRowBackgroundView *backgroundView = (RSRowBackgroundView *)cell.backgroundView;
-		backgroundView.alsoShowTopSeperator = section == 0;
+		backgroundView.showsTopSeperator = section == 0;
 		view = [[UIView alloc] initWithFrame:cell.bounds];
 		cell.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
 		[view addSubview:cell];
@@ -568,7 +568,7 @@ NSString * const kRSMenuItems = @"items";
 		[cell setSelected:YES animated:NO];
 	}
 	RSRowBackgroundView *backgroundView = (RSRowBackgroundView *)cell.backgroundView;
-	backgroundView.alsoShowTopSeperator = indexPath.section == 0 && indexPath.row == 0 && [self tableView:tableView heightForHeaderInSection:indexPath.section] == 0;
+	backgroundView.showsTopSeperator = indexPath.section == 0 && indexPath.row == 0 && [self tableView:tableView heightForHeaderInSection:indexPath.section] == 0;
 	return cell;
 }
 

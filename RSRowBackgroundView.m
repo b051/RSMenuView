@@ -20,6 +20,7 @@
 	if (self = [super initWithFrame:frame]) {
 		self.contentMode = UIViewContentModeRedraw;
 		self.rowBackgroundColor = [UIColor clearColor];
+		self.showBottomSeperator = YES;
 		self.clipsToBounds = NO;
 		self.backgroundColor = nil;
 		_normalAlpha = .11f;
@@ -37,33 +38,47 @@
 - (void)setRowSeperatorImage:(UIImage *)rowSeperatorImage
 {
 	_rowSeperatorImage = rowSeperatorImage;
-	[ruler removeFromSuperview];
-	if (rowSeperatorImage) {
-		self.contentMode = UIViewContentModeScaleToFill;
-		ruler = [[UIImageView alloc] initWithImage:rowSeperatorImage];
-		CGRect frame = ruler.frame;
-		frame.size.width = self.bounds.size.width;
-		frame.origin.y = self.bounds.size.height;// - frame.size.height;
-		ruler.frame = frame;
-		[self addSubview:ruler];
-	} else {
-		self.contentMode = UIViewContentModeRedraw;
-	}
-	[self setAlsoShowTopSeperator:_alsoShowTopSeperator];
+	[self setShowsTopSeperator:_showsTopSeperator];
+	[self setShowBottomSeperator:_showBottomSeperator];
 	[self setNeedsDisplay];
 }
 
-- (void)setAlsoShowTopSeperator:(BOOL)alsoShowTopSeperator
+- (void)setShowBottomSeperator:(BOOL)showBottomSeperator
 {
-	_alsoShowTopSeperator = alsoShowTopSeperator;
+	_showBottomSeperator = showBottomSeperator;
+	[ruler removeFromSuperview];
+	if (showBottomSeperator) {
+		if (_rowSeperatorImage) {
+			self.contentMode = UIViewContentModeScaleToFill;
+			ruler = [[UIImageView alloc] initWithImage:_rowSeperatorImage];
+			CGRect frame = ruler.frame;
+			frame.size.width = self.bounds.size.width;
+			UIOffset offset = self.rowSeperatorImageBottomOffset;
+			frame.origin.y = self.bounds.size.height - frame.size.height + offset.vertical;
+			frame.origin.x = offset.horizontal;
+			ruler.frame = frame;
+			ruler.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
+			[self addSubview:ruler];
+		} else {
+			self.contentMode = UIViewContentModeRedraw;
+			[self setNeedsDisplay];
+		}
+	}
+}
+
+- (void)setShowsTopSeperator:(BOOL)showsTopSeperator
+{
+	_showsTopSeperator = showsTopSeperator;
 	[upperRuler removeFromSuperview];
-	if (alsoShowTopSeperator) {
+	if (showsTopSeperator) {
 		if (_rowSeperatorImage) {
 			self.contentMode = UIViewContentModeScaleToFill;
 			upperRuler = [[UIImageView alloc] initWithImage:_rowSeperatorImage];
 			CGRect frame = upperRuler.frame;
 			frame.size.width = self.bounds.size.width;
-			frame.origin.y = 0;
+			UIOffset offset = self.rowSeperatorImageTopOffset;
+			frame.origin.y = offset.vertical;
+			frame.origin.x = offset.horizontal;
 			upperRuler.frame = frame;
 			[self addSubview:upperRuler];
 		} else {
