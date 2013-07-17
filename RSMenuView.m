@@ -14,6 +14,7 @@ NSString * const kRSMenuTitle = @"title";
 NSString * const kRSMenuLeftView = @"leftview";
 NSString * const kRSMenuRightViews = @"rightviews";
 NSString * const kRSMenuItems = @"items";
+NSString * const kRSMenuIndent = @"indent";
 
 #pragma mark - RSMenuView
 @interface RSMenuView () <UITableViewDataSource, UITableViewDelegate>
@@ -505,7 +506,7 @@ NSString * const kRSMenuItems = @"items";
 
 - (RSMenuCell *)cellForRow:(NSDictionary *)row identifier:(NSString *)cellIdentifier
 {
-	NSUInteger indent = [row[@"indent"] integerValue];
+	NSUInteger indent = [row[kRSMenuIndent] integerValue];
 	
 	RSMenuCell *cell = [_tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 	if (!cell) {

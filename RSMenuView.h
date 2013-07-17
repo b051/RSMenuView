@@ -10,6 +10,12 @@
 @class RSMenuView;
 @class RSMenuCell;
 
+extern NSString * const kRSMenuTitle;
+extern NSString * const kRSMenuLeftView;
+extern NSString * const kRSMenuRightViews;
+extern NSString * const kRSMenuItems;
+extern NSString * const kRSMenuIndent;
+
 @protocol RSMenuViewDelegate <NSObject>
 
 @optional
