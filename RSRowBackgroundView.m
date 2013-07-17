@@ -20,7 +20,7 @@
 	if (self = [super initWithFrame:frame]) {
 		self.contentMode = UIViewContentModeRedraw;
 		self.rowBackgroundColor = [UIColor clearColor];
-		self.showBottomSeperator = YES;
+		self.showsBottomSeperator = YES;
 		self.clipsToBounds = NO;
 		self.backgroundColor = nil;
 		_normalAlpha = .11f;
@@ -39,15 +39,15 @@
 {
 	_rowSeperatorImage = rowSeperatorImage;
 	[self setShowsTopSeperator:_showsTopSeperator];
-	[self setShowBottomSeperator:_showBottomSeperator];
+	[self setShowsBottomSeperator:_showsBottomSeperator];
 	[self setNeedsDisplay];
 }
 
-- (void)setShowBottomSeperator:(BOOL)showBottomSeperator
+- (void)setShowsBottomSeperator:(BOOL)showsBottomSeperator
 {
-	_showBottomSeperator = showBottomSeperator;
+	_showsBottomSeperator = showsBottomSeperator;
 	[ruler removeFromSuperview];
-	if (showBottomSeperator) {
+	if (showsBottomSeperator) {
 		if (_rowSeperatorImage) {
 			self.contentMode = UIViewContentModeScaleToFill;
 			ruler = [[UIImageView alloc] initWithImage:_rowSeperatorImage];
@@ -105,13 +105,15 @@
 		return [super drawRect:rect];
 	}
 	CGContextRef context = UIGraphicsGetCurrentContext();
-	
 	CGFloat lineHeight = .55f;
-	
-	CGContextSetGrayFillColor(context, 0, 1);
-	CGContextFillRect(context, CGRectMake(0, rect.size.height - lineHeight, rect.size.width, lineHeight));
-	CGContextSetGrayFillColor(context, 1, _highlighted ? _highlightedAlpha : _normalAlpha);
-	CGContextFillRect(context, CGRectMake(0, 0, rect.size.width, lineHeight));
+	if (_showsBottomSeperator) {
+		CGContextSetGrayFillColor(context, 0, _highlighted ? _highlightedAlpha : _normalAlpha);
+		CGContextFillRect(context, CGRectMake(0, rect.size.height - lineHeight, rect.size.width, lineHeight));
+	}
+	if (_showsTopSeperator) {
+		CGContextSetGrayFillColor(context, 0, _highlighted ? _highlightedAlpha : _normalAlpha);
+		CGContextFillRect(context, CGRectMake(0, 0, rect.size.width, lineHeight));
+	}
 }
 
 @end

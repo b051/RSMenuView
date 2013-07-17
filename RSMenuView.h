@@ -63,6 +63,9 @@ extern NSString * const kRSMenuIndent;
 - (void)setRowBackgroundColor:(UIColor *)color forIndent:(NSUInteger)indent UI_APPEARANCE_SELECTOR;
 - (UIColor *)rowBackgroundColorForIndent:(NSUInteger)indent UI_APPEARANCE_SELECTOR;
 
+- (void)setRowSeperatorImage:(UIImage *)image forIndent:(NSUInteger)indent UI_APPEARANCE_SELECTOR;
+- (UIImage *)rowSeperatorImageForIndent:(NSUInteger)indent UI_APPEARANCE_SELECTOR;
+
 - (void)setItemSelectedWithIdentifier:(NSString *)identifier;
 
 @end

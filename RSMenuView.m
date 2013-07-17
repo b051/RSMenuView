@@ -35,6 +35,7 @@ NSString * const kRSMenuIndent = @"indent";
 	NSMutableDictionary *textFonts;
 	NSMutableDictionary *textColors;
 	NSMutableDictionary *rowBackgroundColors;
+	NSMutableDictionary *rowSeperatorImages;
 }
 
 @dynamic menuHeaderView, menuFooterView, showsVerticalScrollIndicator;
@@ -120,6 +121,22 @@ NSString * const kRSMenuIndent = @"indent";
 		if (color) return color;
 	}
 	return [UIColor clearColor];
+}
+
+- (void)setRowSeperatorImage:(UIImage *)image forIndent:(NSUInteger)indent
+{
+	if (!rowSeperatorImages) {
+		rowSeperatorImages = [@{} mutableCopy];
+	}
+	rowSeperatorImages[@(indent)] = image;
+}
+
+- (UIImage *)rowSeperatorImageForIndent:(NSUInteger)indent
+{
+	if (rowSeperatorImages) {
+		return rowSeperatorImages[@(indent)];
+	}
+	return nil;
 }
 
 - (void)setMenuFooterView:(UIView *)menuFooterView
@@ -462,6 +479,7 @@ NSString * const kRSMenuIndent = @"indent";
 		RSMenuCell *cell = [self cellForRow:config identifier:@"header"];
 		RSRowBackgroundView *backgroundView = (RSRowBackgroundView *)cell.backgroundView;
 		backgroundView.showsTopSeperator = section == 0;
+		backgroundView.rowSeperatorImage = [self rowSeperatorImageForIndent:[config[kRSMenuIndent] integerValue]];
 		view = [[UIView alloc] initWithFrame:cell.bounds];
 		cell.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
 		[view addSubview:cell];
@@ -524,6 +542,7 @@ NSString * const kRSMenuIndent = @"indent";
 	cell.textLabel.font = [self textFontForIndent:indent];
 	cell.textLabel.textColor = [self textColorForIndent:indent];
 	((RSRowBackgroundView *)cell.backgroundView).rowBackgroundColor = [self rowBackgroundColorForIndent:indent];
+	((RSRowBackgroundView *)cell.backgroundView).rowSeperatorImage = [self rowSeperatorImageForIndent:indent];
 	cell.textLabel.text = row[@"title"];
 	id leftview = row[kRSMenuLeftView];
 	if (leftview) {

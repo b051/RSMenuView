@@ -15,7 +15,7 @@
 @property (nonatomic) CGFloat normalAlpha UI_APPEARANCE_SELECTOR;
 @property (nonatomic) CGFloat highlightedAlpha UI_APPEARANCE_SELECTOR;
 @property (nonatomic) BOOL showsTopSeperator;
-@property (nonatomic) BOOL showBottomSeperator;
+@property (nonatomic) BOOL showsBottomSeperator;
 @property (nonatomic) UIOffset rowSeperatorImageTopOffset UI_APPEARANCE_SELECTOR;
 @property (nonatomic) UIOffset rowSeperatorImageBottomOffset UI_APPEARANCE_SELECTOR;
 @end
