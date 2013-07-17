@@ -439,6 +439,29 @@ NSString * const kRSMenuIndent = @"indent";
 	[self replaceItemAtRow:row section:0 withItem:item];
 }
 
+- (void)moveItemAtRow:(NSUInteger)row section:(NSUInteger)section toRow:(NSUInteger)newRow
+{
+	if (!_inBatchUpdates) [_tableView beginUpdates];
+	
+	NSMutableArray *configuration = [self rowsForSection:section];
+	NSMutableArray *currentRows = [self currentRowsForSection:section];
+	
+	if (configuration.count > row) {
+		id item = configuration[row];
+		NSUInteger relativeRow = [currentRows indexOfObject:item];
+		if (relativeRow != row) {
+			return;
+		}
+		[configuration removeObjectAtIndex:row];
+		[configuration insertObject:item atIndex:newRow];
+		[currentRows removeObjectAtIndex:row];
+		[currentRows insertObject:item atIndex:newRow];
+		[_tableView moveRowAtIndexPath:[NSIndexPath indexPathForRow:relativeRow inSection:section] toIndexPath:[NSIndexPath indexPathForRow:newRow inSection:section]];
+	}
+	
+	if (!_inBatchUpdates) [_tableView endUpdates];
+}
+
 - (void)performBatchUpdates:(dispatch_block_t)updates
 {
 	[_tableView beginUpdates];
@@ -600,15 +623,46 @@ NSString * const kRSMenuIndent = @"indent";
 	NSString *identifier = row[kRSMenuIdentifier];
 	if (subitems && identifier) {
 		BOOL opening = ![_foldableRows[identifier] boolValue];
-		[[NSNotificationCenter defaultCenter] postNotificationName:RSMenuOpenNotification
-															object:nil
-														  userInfo:@{
-													kRSMenuOpening:@(opening),
-												 kRSMenuIdentifier:identifier}];
+		BOOL should = YES;
+		if (opening) {
+			if ([self.delegate respondsToSelector:@selector(menuView:shouldOpenFolderForItemWithIdentifier:)]) {
+				should = [self.delegate menuView:self shouldOpenFolderForItemWithIdentifier:identifier];
+			}
+			
+		}
+		if (!opening) {
+			if ([self.delegate respondsToSelector:@selector(menuView:shouldCloseFolderForItemWithIdentifier:)]) {
+				should = [self.delegate menuView:self shouldCloseFolderForItemWithIdentifier:identifier];
+			}
+		}
+		if (should) {
+			[self performOpen:opening folderWithIdentifier:identifier];
+		}
 		return nil;
 	}
 	indexPathOfSelectedRow = indexPath;
 	return indexPath;
+}
+
+- (void)performOpen:(BOOL)open folderWithIdentifier:(NSString *)identifier
+{
+	BOOL opening = [_foldableRows[identifier] boolValue];
+	if (open != opening) {
+		[[NSNotificationCenter defaultCenter] postNotificationName:RSMenuOpenNotification
+															object:nil
+														  userInfo:@{
+													kRSMenuOpening:@(open),
+												 kRSMenuIdentifier:identifier}];
+		if (open) {
+			if ([self.delegate respondsToSelector:@selector(menuView:didOpenFolderForItemWithIdentifier:)]) {
+				[self.delegate menuView:self didOpenFolderForItemWithIdentifier:identifier];
+			}
+		} else {
+			if ([self.delegate respondsToSelector:@selector(menuView:didCloseFolderForItemWithIdentifier:)]) {
+				[self.delegate menuView:self didCloseFolderForItemWithIdentifier:identifier];
+			}
+		}
+	}
 }
 
 - (void)layoutSubviews

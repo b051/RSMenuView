@@ -22,6 +22,10 @@ extern NSString * const kRSMenuIndent;
 - (void)menuView:(RSMenuView *)menuView didSelectItemWithIdentifier:(NSString *)identifier;
 - (NSDictionary *)menuView:(RSMenuView *)menuView attributesForItemWithIdentifier:(NSString *)identifier;
 - (CGFloat)menuView:(RSMenuView *)menuView heightForItemWithIdentifier:(NSString *)identifier;
+- (BOOL)menuView:(RSMenuView *)menuView shouldOpenFolderForItemWithIdentifier:(NSString *)identifier;
+- (BOOL)menuView:(RSMenuView *)menuView shouldCloseFolderForItemWithIdentifier:(NSString *)identifier;
+- (void)menuView:(RSMenuView *)menuView didOpenFolderForItemWithIdentifier:(NSString *)identifier;
+- (void)menuView:(RSMenuView *)menuView didCloseFolderForItemWithIdentifier:(NSString *)identifier;
 
 @end
 
@@ -52,6 +56,7 @@ extern NSString * const kRSMenuIndent;
 - (void)deleteItemAtRow:(NSUInteger)row section:(NSUInteger)section;
 - (void)replaceItemAtRow:(NSUInteger)row withItem:(NSDictionary *)item __deprecated;
 - (void)replaceItemAtRow:(NSUInteger)row section:(NSUInteger)section withItem:(NSDictionary *)item;
+- (void)moveItemAtRow:(NSUInteger)row section:(NSUInteger)section toRow:(NSUInteger)newRow;
 - (void)performBatchUpdates:(dispatch_block_t)updates;
 
 - (void)setTextFont:(UIFont *)font forIndent:(NSUInteger)indent UI_APPEARANCE_SELECTOR;
@@ -67,5 +72,6 @@ extern NSString * const kRSMenuIndent;
 - (UIImage *)rowSeperatorImageForIndent:(NSUInteger)indent UI_APPEARANCE_SELECTOR;
 
 - (void)setItemSelectedWithIdentifier:(NSString *)identifier;
+- (void)performOpen:(BOOL)open folderWithIdentifier:(NSString *)identifier;
 
 @end
