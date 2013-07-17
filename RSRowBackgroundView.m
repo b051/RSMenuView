@@ -20,7 +20,8 @@
 	if (self = [super initWithFrame:frame]) {
 		self.contentMode = UIViewContentModeRedraw;
 		self.rowBackgroundColor = [UIColor clearColor];
-		self.showsBottomSeperator = YES;
+		self.showsBottomSeperator = NO;
+		self.showsTopSeperator = YES;
 		self.clipsToBounds = NO;
 		self.backgroundColor = nil;
 		_normalAlpha = .11f;

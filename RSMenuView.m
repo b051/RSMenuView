@@ -478,8 +478,6 @@ NSString * const kRSMenuIndent = @"indent";
 	if (config) {
 		RSMenuCell *cell = [self cellForRow:config identifier:@"header"];
 		RSRowBackgroundView *backgroundView = (RSRowBackgroundView *)cell.backgroundView;
-		backgroundView.showsTopSeperator = YES;
-		backgroundView.showsBottomSeperator = NO;
 		backgroundView.rowSeperatorImage = [self rowSeperatorImageForIndent:[config[kRSMenuIndent] integerValue]];
 		view = [[UIView alloc] initWithFrame:cell.bounds];
 		cell.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
@@ -588,9 +586,6 @@ NSString * const kRSMenuIndent = @"indent";
 		[tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
 		[cell setSelected:YES animated:NO];
 	}
-	RSRowBackgroundView *backgroundView = (RSRowBackgroundView *)cell.backgroundView;
-	backgroundView.showsTopSeperator = indexPath.row == 0;
-	backgroundView.showsBottomSeperator = [self tableView:tableView numberOfRowsInSection:indexPath.section] != indexPath.row + 1;
 	return cell;
 }
 
@@ -605,9 +600,6 @@ NSString * const kRSMenuIndent = @"indent";
 	NSString *identifier = row[kRSMenuIdentifier];
 	if (subitems && identifier) {
 		BOOL opening = ![_foldableRows[identifier] boolValue];
-		UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-		RSRowBackgroundView *backgroundView = (RSRowBackgroundView *)cell.backgroundView;
-		backgroundView.showsBottomSeperator = !opening;
 		[[NSNotificationCenter defaultCenter] postNotificationName:RSMenuOpenNotification
 															object:nil
 														  userInfo:@{
