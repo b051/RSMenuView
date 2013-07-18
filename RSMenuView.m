@@ -36,6 +36,7 @@ NSString * const kRSMenuIndent = @"indent";
 	NSMutableDictionary *textColors;
 	NSMutableDictionary *rowBackgroundColors;
 	NSMutableDictionary *rowSeperatorImages;
+	NSMutableDictionary *rowSelectedBackgroundColors;
 }
 
 @dynamic menuHeaderView, menuFooterView, showsVerticalScrollIndicator;
@@ -121,6 +122,23 @@ NSString * const kRSMenuIndent = @"indent";
 		if (color) return color;
 	}
 	return [UIColor clearColor];
+}
+
+
+- (void)setRowSelectedBackgroundColor:(UIColor *)color forIndent:(NSUInteger)indent
+{
+	if (!rowSelectedBackgroundColors) {
+		rowSelectedBackgroundColors = [@{} mutableCopy];
+	}
+	rowSelectedBackgroundColors[@(indent)] = color;
+}
+
+- (UIColor *)rowSelectedBackgroundColorForIndent:(NSUInteger)indent
+{
+	if (rowSelectedBackgroundColors) {
+		return rowSelectedBackgroundColors[@(indent)];
+	}
+	return nil;
 }
 
 - (void)setRowSeperatorImage:(UIImage *)image forIndent:(NSUInteger)indent
@@ -563,6 +581,7 @@ NSString * const kRSMenuIndent = @"indent";
 	//indent
 	cell.textLabel.font = [self textFontForIndent:indent];
 	cell.textLabel.textColor = [self textColorForIndent:indent];
+	cell.selectedBackgroundColor = [self rowSelectedBackgroundColorForIndent:indent];
 	((RSRowBackgroundView *)cell.backgroundView).rowBackgroundColor = [self rowBackgroundColorForIndent:indent];
 	((RSRowBackgroundView *)cell.backgroundView).rowSeperatorImage = [self rowSeperatorImageForIndent:indent];
 	cell.textLabel.text = row[@"title"];
