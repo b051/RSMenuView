@@ -51,7 +51,8 @@ NSString * const RSMenuOpenNotification = @"RSMenuOpenNotification";
 
 - (void)dealloc
 {
-	[[NSNotificationCenter defaultCenter] removeObserver:observer];
+	if (observer)
+		[[NSNotificationCenter defaultCenter] removeObserver:observer];
 }
 
 - (void)buttonClicked:(id)sender

@@ -15,7 +15,7 @@
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
 	if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
-		self.textLabel.backgroundColor = [UIColor clearColor];
+		self.backgroundColor = self.textLabel.backgroundColor = self.contentView.backgroundColor = [UIColor clearColor];
 		self.backgroundView = [[RSRowBackgroundView alloc] initWithFrame:self.contentView.bounds];
 		self.imageView.contentMode = UIViewContentModeCenter;
 		_leftView = [[RSMenuCellItem alloc] initWithFrame:CGRectZero];
