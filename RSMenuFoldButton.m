@@ -22,11 +22,12 @@ NSString * const RSMenuOpenNotification = @"RSMenuOpenNotification";
 - (id)initWithIdentifier:(NSString *)_identifier attributes:(NSDictionary *)attributes
 {
 	if (self = [super initWithFrame:CGRectZero]) {
+		opening = [attributes[kRSMenuOpening] boolValue];
+		UIImage *icon = [UIImage imageNamed:@"menu_arrow"];
+		if (!icon) return self;
 		identifier = _identifier;
 		button = [UIButton buttonWithType:UIButtonTypeCustom];
-		UIImage *icon = [UIImage imageNamed:@"menu_arrow"];
 		[button addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
-		opening = [attributes[kRSMenuOpening] boolValue];
 		
 		observer = [[NSNotificationCenter defaultCenter] addObserverForName:RSMenuOpenNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
 			if ([note.userInfo[kRSMenuIdentifier] isEqualToString:identifier]) {
