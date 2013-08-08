@@ -1,12 +1,12 @@
 Pod::Spec.new do |s|
   s.name     = 'RSMenuView'
-  s.version  = '0.6'
-  s.license  = 'MIT'
+  s.version  = '1.0'
+  s.license  = { :type => 'MIT', :file => 'LICENSE' }
   s.summary  = 'An event driven tableview. supports UIAppearance and more.'
   s.homepage = 'https://github.com/b051/RSMenuView'
-  s.authors  = { 'Rex Sheng' => 'rex@lognllc.com' }
+  s.authors  = { 'Rex Sheng' => 'shengning@gmail.com' }
   s.source   = { :git => 'https://github.com/b051/RSMenuView.git', :tag => s.version.to_s }
-  s.source_files = 'RS*.{h,m}'
+  s.source_files = '*.{h,m}'
   s.requires_arc = true
-  s.ios.deployment_target = '5.0'
+  s.platform     = :ios, '5.0'
 end
