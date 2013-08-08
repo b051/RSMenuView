@@ -7,9 +7,6 @@
 
 #import <UIKit/UIKit.h>
 
-extern NSString * const kRSMenuType;
-extern NSString * const kRSMenuIdentifier;
-
 @protocol RSMenuCellItem <NSObject>
 
 - (id)initWithIdentifier:(NSString *)identifier attributes:(NSDictionary *)attributes;

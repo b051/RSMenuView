@@ -16,6 +16,9 @@ extern NSString * const kRSMenuRightViews;
 extern NSString * const kRSMenuItems;
 extern NSString * const kRSMenuIndent;
 
+extern NSString * const kRSMenuType;
+extern NSString * const kRSMenuIdentifier;
+
 @protocol RSMenuViewDelegate <NSObject>
 
 @optional

@@ -10,12 +10,11 @@
 
 @interface RSMenuCell : UITableViewCell
 
-@property (nonatomic, strong) RSMenuCellItem *rightView;
-@property (nonatomic, strong) RSMenuCellItem *leftView;
+@property (nonatomic, strong, readonly) RSMenuCellItem *rightView;
+@property (nonatomic, strong, readonly) RSMenuCellItem *leftView;
 @property (nonatomic, strong) UIColor *selectedTextShadowColor UI_APPEARANCE_SELECTOR;
 @property (nonatomic, strong) UIColor *highlightedTextShadowColor UI_APPEARANCE_SELECTOR;
 @property (nonatomic, strong) UIColor *textShadowColor UI_APPEARANCE_SELECTOR;
-//@property (nonatomic, strong) UIImage *rowSeperatorImage UI_APPEARANCE_SELECTOR;
 @property (nonatomic, strong) UIColor *selectedBackgroundColor;
 
 @property (nonatomic, strong) NSString *identifier;
