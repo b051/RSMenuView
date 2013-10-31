@@ -271,11 +271,14 @@ NSString * const kRSMenuIndent = @"indent";
 		}];
 		if (config) *stop = YES;
 	}];
-	
+	NSUInteger sections = _currentRows.count;
 	NSMutableArray *currentRows = [self currentRowsForSection:section];
 	NSUInteger startRow = [currentRows indexOfObject:config] + 1;
 	NSArray *subitems = config[kRSMenuItems];
 	[_tableView beginUpdates];
+	if (_currentRows.count > sections) {
+		[_tableView insertSections:[[NSIndexSet alloc] initWithIndex:section] withRowAnimation:_rowAnimation];
+	}
 	if ([opening boolValue]) {
 		NSMutableArray *indexPaths = [NSMutableArray array];
 		for (int i = 0; i < subitems.count; i++) {
